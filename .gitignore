@@ -7,4 +7,6 @@
 
 # .tfvars files
 *.tfvars
-terraform-provider-vmworkstation
+
+# for binaries
+terraform-provider-vmworkstation*
