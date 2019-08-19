@@ -24,8 +24,7 @@ bootstrap: --generateSSL --vmrest ## Prepare environment for you can use a API R
 build: ## Build the binary of the module
 	@go build -o $(BINARY)
 
-install: build $(PATHOFPLUGINS)/lock.json ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment
-	@cp $(BINARY) $(PATHOFPLUGINS)/$(BINARY)
+install: build --copyBIN $(PATHOFPLUGINS)/lock.json ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment
 	@sed -i '/"vmworkstation":/'d $(PATHOFPLUGINS)/lock.json
 	@sed -i ':N;s/{/{\n  "vmworkstation": "$(shell sha256sum $(BINARY) | awk '{ print $$1 }')",/g' $(PATHOFPLUGINS)/lock.json
 
@@ -43,6 +42,9 @@ clean: ## Clean the project, this only remove default config of API REST VmWare 
 --generateSSL:
 	@openssl req -x509 -newkey rsa:4096 -keyout $(PRIVATEKEYFILE) -out $(CERTFILE) -days 365 -nodes -subj "/C=ES/ST=Granada/L=Granada/O=Internet SL/OU=IT/CN=localhost"
 	@vmrest -C
+
+--copyBIN:
+	@cp $(BINARY) $(PATHOFPLUGINS)/$(BINARY)
 
 --vmrest: $(PRIVATEKEYFILE) $(CERTFILE)
 	@vmrest -k $(PRIVATEKEYFILE) -c $(CERTFILE) -i $(IPADDRESS) -p $(PORT)
