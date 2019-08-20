@@ -10,3 +10,6 @@
 
 # for binaries
 terraform-provider-vmworkstation*
+
+# for certificates
+*.pem
