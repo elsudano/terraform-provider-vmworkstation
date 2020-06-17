@@ -1,15 +1,2 @@
-#  Local .terraform directories
-**/.terraform/*
-
-# .tfstate files
-*.tfstate
-*.tfstate.*
-
-# .tfvars files
-*.tfvars
-
 # for binaries
 terraform-provider-vmworkstation*
-
-# for certificates
-*.pem

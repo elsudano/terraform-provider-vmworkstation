@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	wsapiclient "github.com/elsudano/vmware-workstation-api-client"
+	wsapiclient "github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -21,7 +21,6 @@ func NewConfig(d *schema.ResourceData) (*Config, error) {
 		err := fmt.Errorf("User, Password and URL that required parameters")
 		return nil, err
 	}
-
 	config := &Config{
 		User:         d.Get("user").(string),
 		Password:     d.Get("password").(string),
@@ -29,22 +28,17 @@ func NewConfig(d *schema.ResourceData) (*Config, error) {
 		InsecureFlag: d.Get("https").(bool),
 		Debug:        d.Get("debug").(bool),
 	}
-
-	if d.Get("debug") == true {
-		log.Printf("[VMWS] Fu: NewConfig Fi: config.go Ob: %#v\n", config)
-	}
+	log.Printf("[VMWS] Fi: config.go Fu: NewConfig Ob: %#v\n", config)
 	return config, nil
 }
 
-func (c *Config) Client() (*wsapiclient.Client, error) {
-	client, err := wsapiclient.NewClient(c.User, c.Password, c.URL)
-
+func (co *Config) Client() (*wsapiclient.Client, error) {
+	client, err := wsapiclient.New()
+	client.ConfigCli(co.User, co.Password, co.URL, co.Debug)
 	if err != nil {
 		return nil, err
 	}
-
-	if c.Debug == true {
-		log.Printf("[VMWS] Fu: Client Fi: config.go Ob: %#v\n", client)
-	}
+	log.Printf("[VMWS] Fi: config.go Fu: Client Ob: %#v\n", client)
+	// client.SwitchDebug()
 	return client, err
 }

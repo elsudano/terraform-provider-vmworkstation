@@ -52,9 +52,7 @@ func Provider() terraform.ResourceProvider {
 		},
 		ConfigureFunc: providerConfigure,
 	}
-	// if provider.Schema.debug == true {
-	// 	log.Printf("[VMWS] Fu: Provider Fi: provider.go Ob: %#v\n", provider)
-	// }
+	// log.Printf("[VMWS] Fi: provider.go Fu: Provider Ob: %#v\n", provider)
 	return provider
 }
 
@@ -63,9 +61,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	if d.Get("debug") == true {
-		log.Printf("[VMWS] Fu: providerConfigure Fi: provider.go Ob: %#v\n", d)
-		log.Printf("[VMWS] Fu: providerConfigure Fi: provider.go Ob: %#v\n", config)
-	}
-	return config.Client()
+	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Ob: %#v\n", d)
+	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Ob: %#v\n", config)
+	test_client, err := config.Client()
+	return test_client, err
 }

@@ -14,12 +14,12 @@ func main() {
 /* func main() {
 	client, err := wsapiclient.New()
 	if err != nil {
-		log.Printf("[VMWS] Fu: Main Fi: main.go Ob: %#v\n", client)
+		log.Printf("[VMWS] Fi: main.go Fu: Main Ob: %#v\n", client)
 		os.Exit(1)
 	}
 	fmt.Printf("La URL: %s\n", client.BaseURL.String())
 	client.User = "admin"
-	client.Password = "Carfer#007"
-	client.BaseURL, _ = url.Parse("https://localhost:5555/api/")
+	client.Password = "Adm1n#00"
+	client.BaseURL, _ = url.Parse("https://localhost:8697/api/")
 	fmt.Printf("La URL: %s\n", client.BaseURL.String())
 } */

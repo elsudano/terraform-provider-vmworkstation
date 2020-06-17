@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"testing"
 
-	wsapiclient "github.com/elsudano/vmware-workstation-api-client"
+	wsapiclient "github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )

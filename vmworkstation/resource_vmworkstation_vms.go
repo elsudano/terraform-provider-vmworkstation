@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	wsapiclient "github.com/elsudano/vmware-workstation-api-client"
+	wsapiclient "github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -27,23 +27,63 @@ func resourceVMWSVms() *schema.Resource {
 				Required:    true,
 				Description: "The name of the resource, also acts as it's unique ID",
 			},
+			"image": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "String with ID for the image that create the VM",
+			},
+			"processors": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Number of processors that will have the VM",
+			},
+			"memory": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "How much memory will have the VM",
+			},
 		},
 	}
 }
 
 func resourceVMWSVmsCreate(d *schema.ResourceData, m interface{}) error {
-	return resourceVMWSVmsCreate(d, m)
+	// apiClient := m.(*wsapiclient.Client)
+
+	id_name := d.Get("name").(string)
+	// apiClient.GetVM("id_name")
+	d.SetId(id_name)
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmsCreate Ob: %#v\n", id_name)
+	return resourceVMWSVmsRead(d, m)
 }
 
 func resourceVMWSVmsRead(d *schema.ResourceData, m interface{}) error {
+	// apiClient := m.(*wsapiclient.Client)
+
+	// MyVM, err := apiClient.GetVM(d.Id())
+
+	// if err != nil {
+	// 	d.SetId("")
+	// 	return nil
+	// }
+
+	// d.Set("name", MyVM.IdVM)
 	return nil
 }
 
 func resourceVMWSVmsUpdate(d *schema.ResourceData, m interface{}) error {
-	return resourceVMWSVmsUpdate(d, m)
+	// d.Partial(true)
+
+	// if d.HasChange("name") {
+	// 	d.SetId("name")
+	// }
+	// d.SetPartial("name")
+
+	// d.Partial(false)
+	return resourceVMWSVmsRead(d, m)
 }
 
 func resourceVMWSVmsDelete(d *schema.ResourceData, m interface{}) error {
+	d.SetId("")
 	return nil
 }
 
@@ -59,9 +99,7 @@ func resourceVMWSVmsExists(d *schema.ResourceData, m interface{}) (bool, error) 
 			return false, err
 		}
 	}
-	if d.Get("debug") == true {
-		log.Printf("[VMWS] Fu: resourceVMWSVmsExists Fi: resource_vmworkstation_vms.go Ob: %#v\n", apiClient)
-	}
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmsExists Ob: %#v\n", apiClient)
 	return true, nil
 }
 
