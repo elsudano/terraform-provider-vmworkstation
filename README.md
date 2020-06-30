@@ -21,10 +21,10 @@ The current version of this provider requires Terraform v0.10.2 or higher to
 run.
 
 Note that you need to run `terraform init` to fetch the provider before
-deploying. Read about the provider split and other changes to TF v0.10.0 in the
-official release announcement found [here][tf-0.10-announce].
+deploying. Read about the provider split and other changes to TF v0.13.0 in the
+official release announcement found [here][tf-0.13-announce].
 
-[tf-0.10-announce]: https://www.hashicorp.com/blog/hashicorp-terraform-0-10/
+[tf-0.13-announce]: https://www.hashicorp.com/blog/announcing-the-terraform-0-13-beta/
 
 ## Full Provider Documentation
 
@@ -44,7 +44,7 @@ The syntax is as follows:
 
 ```hcl
 provider "vmworkstation" {
-  version = "~> 1.5"
+  version = "~> 0.1.0"
   ...
 }
 ```
@@ -118,36 +118,4 @@ See [Building the Provider](#building-the-provider) for details on building the 
 
 ## Configuring Environment Variables
 
-Most of the tests in this provider require a comprehensive list of environment
-variables to run. See the individual `*_test.go` files in the
-[`vsphere/`](vsphere/) directory for more details. The next section also
-describes how you can manage a configuration file of the test environment
-variables.
-
-### Using the `.tf-vmworkstation-devrc.mk` file
-
-The [`tf-vmworkstation-devrc.mk.example`](tf-vmworkstation-devrc.mk.example) file contains
-an up-to-date list of environment variables required to run the acceptance
-tests. Copy this to `$HOME/.tf-vmworkstation-devrc.mk` and change the permissions to
-something more secure (ie: `chmod 600 $HOME/.tf-vmworkstation-devrc.mk`), and
-configure the variables accordingly.
-
-## Running the Acceptance Tests
-
-After this is done, you can run the acceptance tests by running:
-
-```sh
-$ make testacc
-```
-
-If you want to run against a specific set of tests, run `make testacc` with the
-`TESTARGS` parameter containing the run mask as per below:
-
-```sh
-make testacc TESTARGS="-run=TestAccVMWVirtualMachine"
-```
-
-This following example would run all of the acceptance tests matching
-`TestAccVMWVirtualMachine`. Change this for the specific tests you want to
-run.
-
+**NOTE:** Pending
