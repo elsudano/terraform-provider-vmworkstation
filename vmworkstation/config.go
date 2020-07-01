@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	wsapiclient "github.com/elsudano/vmware-workstation-api-client/wsapiclient"
+	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 

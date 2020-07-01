@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 
 PREFIX = terraform-provider
-NAME = vmware-workstation
+NAME = vmworkstation
 VERSION = 0.1.0
 OS = linux
 ARCH = amd64
