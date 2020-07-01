@@ -25,7 +25,7 @@ build: ## Build the binary of the module
 
 publish: build --compress ## This option prepare the zip files to publishing in Terraform Registry
 	@sha256sum $(DIRELEASES)*.zip > $(DIRELEASES)$(SHAFILE)
-	@gpg --detach-sign $(DIRELEASES)$(SHAFILE)
+	@gpg -q --detach-sign $(DIRELEASES)$(SHAFILE)
 
 install: build --copyBIN $(PATHOFPLUGINS)/lock.json ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment
 	@sed -i '/"vmworkstation":/'d $(PATHOFPLUGINS)/lock.json
