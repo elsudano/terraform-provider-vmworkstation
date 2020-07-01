@@ -6,13 +6,12 @@ description: |-
   A Terraform provider to work with VMware Workstation Pro, allowing management of virtual machines and other VMware resources. Supports management through VMware Workstation Pro.
 ---
 
-# VMware vSphere Provider
+# VMware Workstation Provider
 
-The VMware vSphere provider gives Terraform the ability to work with VMware Workstation Pro
+The VMware Workstation provider gives Terraform the ability to work with VMware Workstation Pro
 Products, notably [VMware Workstation][vmware-worstation].
 This provider can be used to manage many aspects of a VMware Worstation Pro
-environment, including virtual machines, standard and distributed networks,
-datastores, and more.
+environment, including virtual machines, datastores, and more.
 
 [vmware-workstation]: https://www.vmware.com/products/workstation-pro.html
 
@@ -20,6 +19,8 @@ Use the navigation on the left to read about the various resources and data
 sources supported by the provider.
 
 ~> **NOTE:** This provider requires API REST enable on VMware Worstation Pro.
+
+  [VmWare Workstation API Rest]: https://github.com/elsudano/vmware-workstation-api-client
 
 ## Example Usage
 
