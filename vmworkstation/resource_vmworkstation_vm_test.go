@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"testing"
 
-	wsapiclient "github.com/elsudano/vmware-workstation-api-client/wsapiclient"
+	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -39,7 +39,7 @@ func testAccCheckVMDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := apiClient.GetVM(rs.Primary.ID)
+		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"])
 		if err == nil {
 			return fmt.Errorf("Alert still exists")
 		}
@@ -62,9 +62,8 @@ func testAccCheckVMExists(resource string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("No Record ID is set")
 		}
-		name := rs.Primary.ID
 		apiClient := testAccProvider.Meta().(*wsapiclient.Client)
-		_, err := apiClient.GetVM(name)
+		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"])
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}

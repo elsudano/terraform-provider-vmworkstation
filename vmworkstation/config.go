@@ -28,17 +28,17 @@ func NewConfig(d *schema.ResourceData) (*Config, error) {
 		InsecureFlag: d.Get("https").(bool),
 		Debug:        d.Get("debug").(bool),
 	}
-	log.Printf("[VMWS] Fi: config.go Fu: NewConfig Ob: %#v\n", config)
+	log.Printf("[VMWS] Fi: config.go Fu: NewConfig Obj:%#v\n", config)
 	return config, nil
 }
 
 func (co *Config) Client() (*wsapiclient.Client, error) {
 	client, err := wsapiclient.New()
-	client.ConfigCli(co.User, co.Password, co.URL, co.Debug)
+	log.Printf("[VMWS] Fi: config.go Fu: Client Obj:client %#v\n", client)
+	client.ConfigCli(co.URL, co.User, co.Password, co.InsecureFlag, co.Debug)
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("[VMWS] Fi: config.go Fu: Client Ob: %#v\n", client)
-	// client.SwitchDebug()
+	log.Printf("[VMWS] Fi: config.go Fu: Client Obj:%#v\n", client)
 	return client, err
 }

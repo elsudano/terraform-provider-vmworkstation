@@ -44,7 +44,7 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"vmworkstation_vms":    resourceVMWSVms(),
+			"vmworkstation_vm":     resourceVMWSVm(),
 			"vmworkstation_folder": resourceVMWSFolder(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
@@ -52,7 +52,7 @@ func Provider() terraform.ResourceProvider {
 		},
 		ConfigureFunc: providerConfigure,
 	}
-	// log.Printf("[VMWS] Fi: provider.go Fu: Provider Ob: %#v\n", provider)
+	// log.Printf("[VMWS] Fi: provider.go Fu: Provider Obj:%#v\n", provider)
 	return provider
 }
 
@@ -61,8 +61,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Ob: %#v\n", d)
-	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Ob: %#v\n", config)
+	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d)
+	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", config)
 	test_client, err := config.Client()
 	return test_client, err
 }
