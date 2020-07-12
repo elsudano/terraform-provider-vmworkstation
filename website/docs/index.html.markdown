@@ -22,9 +22,84 @@ sources supported by the provider.
 
   [VmWare Workstation API Rest]: https://github.com/elsudano/vmware-workstation-api-client
 
+## Argument Reference
+
+The provider configuration block accepts the following arguments. In general, it's better to set them via indicated environment variables to keep the configuration safe.
+
+##### 1.- *user*
+> (Required) Username that will be used to authenticate in the API REST of VmWare Workstation. It is recommended to be set via VMWS_USER environment variable.
+
+##### 2.- *password*
+> (Required) Matcnhing password for the user to authenticate in the API REST of VmWare Workstation. It is recommended to be set via VMWS_PASSWORD environment variable.
+
+##### 3.- *url*
+> (Required) This is the URL where the API REST of VmWare Workstation are listen, normally in "https://localhost:8697/api". It is recommended to be set via VMWS_URL environment variable.
+
+##### 4.- *https*
+> (Optional) This parameter is false for now the API REST of VmWare Workstation just listen in http, but the comunnication it's encrypted, because to use is necessary created a certificate, maybe in the future VmWare change this, for that, is this variable. It is recommended to be set via VMWS_HTTPS environment variable.
+
+##### 5.- *debug*
+> (Optional) The last one is the variable to setting the debug mode, when it's a true, the provider module print in the log of Terraform some actions and is easier find bug. It is recommended to be set via VMWS_DEBUG environment variable.
+
 ## Example Usage
 
-## Argument Reference
+In file main.tf:
+
+```HLC
+terraform {
+  required_version = ">= 0.13"
+  required_providers {
+    vmworkstation = {
+      source  = "elsudano/vmworkstation"
+      version = "0.1.5"
+    }
+  }
+}
+resource "vmworkstation_vm" "test_machine" {
+  sourceid     = var.vmws_reource_frontend_sourceid
+  denomination = var.vmws_reource_frontend_denomination
+  description  = var.vmws_reource_frontend_description
+  processors   = var.vmws_reource_frontend_processors
+  memory       = var.vmws_reource_frontend_memory
+}
+```
+
+In file output.tf
+
+```HLC
+output vmws_frontend_id {
+  value       = vmworkstation_vm.test_machine.id
+  description = "This is the id of the VM"
+}
+```
+
+In file variables.tf
+
+```HLC
+variable "vmws_reource_frontend_sourceid" {
+  type        = string
+  description = "(Required) The ID of the VM that to use for clone at the new"
+}
+variable "vmws_reource_frontend_denomination" {
+  type        = string
+  description = "(Required) The Name of VM in WS "
+  default     = "NewInstance"
+}
+variable "vmws_reource_frontend_description" {
+  type        = string
+  description = "(Required) The Description at later maybe to explain the instance  "
+}
+variable "vmws_reource_frontend_processors" {
+  type        = string
+  description = "(Required) The number of processors of the Virtual Machine"
+  default     = "1"
+}
+variable "vmws_reource_frontend_memory" {
+  type        = string
+  description = "(Required) The size of memory to the Virtual Machine"
+  default     = "512"
+}
+```
 
 ### Session persistence options
 
