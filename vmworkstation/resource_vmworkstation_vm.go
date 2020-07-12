@@ -76,6 +76,11 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
+	VM, err = apiClient.UpdateVM(VM.IdVM, denomination, description, processors, memory)
+	if err != nil {
+		d.SetId("")
+		return nil
+	}
 	d.SetId(VM.IdVM)
 	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmCreate Obj:ID of new VM %#v\n", VM.IdVM)
 	return resourceVMWSVmRead(d, m)
@@ -83,26 +88,74 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 
 func resourceVMWSVmRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*wsapiclient.Client)
-	MyVM, err := apiClient.ReadVM(d.Id())
+	VM, err := apiClient.ReadVM(d.Id())
 	if err != nil {
 		d.SetId("")
 		return nil
 	}
-	d.SetId(MyVM.IdVM)
-	d.Set("denomination", MyVM.Denomination)
-	d.Set("description", MyVM.Description)
-	d.Set("image", MyVM.Image)
-	d.Set("processors", MyVM.CPU.Processors)
-	d.Set("memory", MyVM.Memory)
-	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmRead Obj:One VM %#v\n", MyVM)
+	d.SetId(VM.IdVM)
+	d.Set("denomination", VM.Denomination)
+	d.Set("description", VM.Description)
+	// d.Set("image", VM.Image)
+	d.Set("processors", VM.CPU.Processors)
+	d.Set("memory", VM.Memory)
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmRead Obj:One VM %#v\n", VM)
 	return nil
 }
 
 func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
+	apiClient := m.(*wsapiclient.Client)
+	VM, err := apiClient.ReadVM(d.Id())
+	if err != nil {
+		d.SetId("")
+		return nil
+	}
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: Denomination field in function %#v\n", d.Get("denomination"))
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: VM to Update %#v\n", VM)
 	d.Partial(true) // this is such as to a semaphore, it's a switch to change a state of blocked
 	if d.HasChange("denomination") {
-		d.SetId("denomination")
+		DenominationOldState, DenominationNewState := d.GetChange("denomination")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: Old value of Denomination %#v\n", DenominationOldState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: New value of Denomination %#v\n", DenominationNewState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: denomination field in VM after %#v\n", VM.Denomination)
+		if _, err := apiClient.UpdateVM(d.Id(), d.Get("denomination").(string), VM.Description, VM.CPU.Processors, VM.Memory); err != nil {
+			return nil
+		}
 		d.SetPartial("denomination")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: denomination field in VM before %#v\n", VM.Denomination)
+	}
+	if d.HasChange("description") {
+		DescriptionOldState, DescriptionNewState := d.GetChange("description")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: Old value of Description %#v\n", DescriptionOldState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: New value of Description %#v\n", DescriptionNewState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: description field in VM after %#v\n", VM.Description)
+		if _, err := apiClient.UpdateVM(d.Id(), VM.Denomination, d.Get("description").(string), VM.CPU.Processors, VM.Memory); err != nil {
+			return nil
+		}
+		d.SetPartial("denomination")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: description field in VM before %#v\n", VM.Description)
+	}
+	if d.HasChange("processors") {
+		ProcessorsOldState, ProcessorsNewState := d.GetChange("processors")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: Old value of Description %#v\n", ProcessorsOldState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: New value of Description %#v\n", ProcessorsNewState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: description field in VM after %#v\n", VM.CPU.Processors)
+		if _, err := apiClient.UpdateVM(d.Id(), VM.Denomination, VM.Description, d.Get("processors").(int), VM.Memory); err != nil {
+			return nil
+		}
+		d.SetPartial("processors")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: description field in VM before %#v\n", VM.CPU.Processors)
+	}
+	if d.HasChange("memory") {
+		MemoryOldState, MemoryNewState := d.GetChange("memory")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: Old value of Description %#v\n", MemoryOldState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: New value of Description %#v\n", MemoryNewState)
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: description field in VM after %#v\n", VM.Memory)
+		if _, err := apiClient.UpdateVM(d.Id(), VM.Denomination, VM.Description, VM.CPU.Processors, d.Get("memory").(int)); err != nil {
+			return nil
+		}
+		d.SetPartial("memory")
+		log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj: description field in VM before %#v\n", VM.Memory)
 	}
 	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmUpdate Obj:DataScheme %#v\n", d)
 	d.Partial(false) // this is such as to a semaphore, it's a switch to change a state of unblocked
@@ -122,7 +175,7 @@ func resourceVMWSVmDelete(d *schema.ResourceData, m interface{}) error {
 
 func resourceVMWSVmExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	apiClient := m.(*wsapiclient.Client)
-	MyVM, err := apiClient.ReadVM(d.Id())
+	VM, err := apiClient.ReadVM(d.Id())
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			return false, nil
@@ -131,7 +184,7 @@ func resourceVMWSVmExists(d *schema.ResourceData, m interface{}) (bool, error) {
 		}
 	}
 	log.Printf("[VMWS] Fi: resource_vmworkstation_vms.go Fu: resourceVMWSVmExists Obj:APIClient %#v\n", apiClient)
-	if MyVM == nil {
+	if VM == nil {
 		return false, nil
 	}
 	return true, nil

@@ -61,8 +61,9 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	my_client, err := config.Client()
+	// my_client.SwitchDebug()
 	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d)
 	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", config)
-	test_client, err := config.Client()
-	return test_client, err
+	return my_client, err
 }
