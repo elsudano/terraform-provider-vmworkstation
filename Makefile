@@ -2,7 +2,8 @@ SHELL = /bin/bash
 
 PREFIX = terraform-provider
 NAME = vmworkstation
-VERSION = 0.1.5 # https://semver.org/
+VERSION = 0.1.7
+# https://semver.org/
 OS = linux
 ARCH = amd64
 DIRELEASES = 

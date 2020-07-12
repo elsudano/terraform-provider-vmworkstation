@@ -100,18 +100,31 @@ variable "vmws_reource_frontend_memory" {
   default     = "512"
 }
 ```
+### Useful commands to handle the infrastructure:
 
+```bash
+export VMWS_USER="xxxx"; \
+export VMWS_PASSWORD="xxxx"; \
+export VMWS_URL="https://localhost:8697/api"; \
+ansible-vault decrypt terraform/vault/vmw.tfvars; \
+terraform plan -state=terraform/envi/vmw/terraform.tfstate -var-file=terraform/vault/vmw.tfvars terraform/envi/vmw/; \
+ansible-vault encrypt terraform/vault/vmw.tfvars
+```
 ### Session persistence options
 
 ### Debugging options
+
+To find fastly the outputs of the provider in the Terraform logs you can use the follow command:
+
+```bash
+watch -t -n 5 "cat <log file> | grep -e VMWS -e WSAPICLI -e $(date +%Y-%m-%d) | tail -15"
+```
 
 ## Notes on Required Privileges
 
 ### Tags
 
 ### Events
-
-## Use of Managed Object References by the vSphere Provider
 
 ### Locating Managed Object IDs
 
