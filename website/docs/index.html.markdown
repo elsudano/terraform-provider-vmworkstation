@@ -128,6 +128,4 @@ watch -t -n 5 "cat <log file> | grep -e VMWS -e WSAPICLI -e $(date +%Y-%m-%d) | 
 
 ### Locating Managed Object IDs
 
-#### Via the vSphere Managed Object Browser (MOB)
-
 ## Bug Reports and Contributing
