@@ -1,5 +1,9 @@
 # Terraform VMware Workstation Pro Provider
 
+In the Terraform registry you can download the latest version of this provider 
+
+https://registry.terraform.io/providers/elsudano/vmworkstation/latest
+
 This is the repository for the Terraform VMware Workstation Pro Provider, which one can use
 with Terraform to work with [VMware Workstation][vmware-workstation] Products.
 
