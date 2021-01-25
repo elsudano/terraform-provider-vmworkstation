@@ -2,17 +2,15 @@ SHELL = /bin/bash
 
 PREFIX = terraform-provider
 NAME = vmworkstation
-VERSION = 0.1.7
+VERSION = 0.1.9
 # https://semver.org/
 OS = linux
 ARCH = amd64
-DIRELEASES = 
+DIRELEASES = releases/
+SIGNFILES = publish_files/
 BINARY = $(PREFIX)-$(NAME)_v$(VERSION)
 ZIPFILE = $(PREFIX)-$(NAME)_$(VERSION)_$(OS)_$(ARCH).zip
 SHAFILE = $(PREFIX)-$(NAME)_$(VERSION)_SHA256SUMS
-PATHOFTERRAFORM = ~/GitHub/Automated-Deploy-Server/.terraform
-PATHOFPLUGINS_12 = $(PATHOFTERRAFORM)/plugins/linux_amd64
-PATHOFPLUGINS_13 = $(PATHOFTERRAFORM)/plugins/registry.terraform.io/elsudano/$(NAME)/$(VERSION)/$(OS)_$(ARCH)
 
 #-------------------------------------------------------#
 #    Public Functions                                   #
@@ -26,28 +24,24 @@ help:
 build: ## Build the binary of the module
 	@go build -o $(DIRELEASES)$(BINARY)
 
-publish: build --compress ## This option prepare the zip files to publishing in Terraform Registry
+install: build ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment for both Terraform 0.12 and 0.13_beta2
+	@echo When you to be develop a provider, is better use the ~/.terraformrc file
+	@cat ~/.terraformrc | grep $(NAME)
+	@ls -lah $(DIRELEASES)
+
+publish: clean install --compress ## This option prepare the zip files to publishing in Terraform Registry
 	@sha256sum $(DIRELEASES)*.zip > $(DIRELEASES)$(SHAFILE)
 	@gpg -q --detach-sign $(DIRELEASES)$(SHAFILE)
-
-install: build --moveBIN $(PATHOFPLUGINS_12)/lock.json ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment for both Terraform 0.12 and 0.13_beta2
-	@sed -i '/"vmworkstation":/'d $(PATHOFPLUGINS_12)/lock.json
-	@sed -i ':N;s/{/{\n  "vmworkstation": "$(shell sha256sum $(PATHOFPLUGINS_12)/$(BINARY)_x4 | awk '{ print $$1 }')",/g' $(PATHOFPLUGINS_12)/lock.json
-	@ls -lah $(PATHOFPLUGINS_12) $(PATHOFPLUGINS_13)
+	@mv $(DIRELEASES)$(ZIPFILE) $(SIGNFILES)
+	@mv $(DIRELEASES)$(SHAFILE) $(SIGNFILES)
+	@mv $(DIRELEASES)$(SHAFILE).sig $(SIGNFILES)
 
 clean: ## Clean the project, this only remove default config of API REST VmWare Workstation Pro, the cert, private key and binary
-	@rm -f $(DIRELEASES)$(BINARY) $(DIRELEASES)$(ZIPFILE) $(DIRELEASES)$(SHAFILE) $(DIRELEASES)$(SHAFILE).sig
-	@rm -fR $(PATHOFTERRAFORM)
+	@rm -f $(DIRELEASES)$(BINARY) 
 
 #-------------------------------------------------------#
 #    Private Functions                                  #
 #-------------------------------------------------------#
---moveBIN:
-	@mkdir --parents $(PATHOFPLUGINS_12)
-	@mkdir --parents $(PATHOFPLUGINS_13)
-	@cp $(DIRELEASES)$(BINARY) $(PATHOFPLUGINS_12)/$(BINARY)_x4
-	@mv $(DIRELEASES)$(BINARY) $(PATHOFPLUGINS_13)/$(BINARY)
-
 --compress:
 	@zip -q $(DIRELEASES)$(ZIPFILE) $(DIRELEASES)$(BINARY)
 
