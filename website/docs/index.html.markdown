@@ -47,11 +47,11 @@ In file main.tf:
 
 ```HLC
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 0.14.4"
   required_providers {
     vmworkstation = {
       source  = "elsudano/vmworkstation"
-      version = "0.1.5"
+      version = "0.2.1"
     }
   }
 }
@@ -59,6 +59,7 @@ resource "vmworkstation_vm" "test_machine" {
   sourceid     = var.vmws_reource_frontend_sourceid
   denomination = var.vmws_reource_frontend_denomination
   description  = var.vmws_reource_frontend_description
+  path         = var.vmws_reource_frontend_path
   processors   = var.vmws_reource_frontend_processors
   memory       = var.vmws_reource_frontend_memory
 }
@@ -82,12 +83,16 @@ variable "vmws_reource_frontend_sourceid" {
 }
 variable "vmws_reource_frontend_denomination" {
   type        = string
-  description = "(Required) The Name of VM in WS "
+  description = "(Required) The Name of VM in WS"
   default     = "NewInstance"
 }
 variable "vmws_reource_frontend_description" {
   type        = string
-  description = "(Required) The Description at later maybe to explain the instance  "
+  description = "(Required) The Description at later maybe to explain the instance"
+}
+variable "vmws_frontend_path" {
+  type        = string
+  description = "(Required) The Path where will be our instance in VmWare"
 }
 variable "vmws_reource_frontend_processors" {
   type        = string

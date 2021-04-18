@@ -25,10 +25,10 @@ The current version of this provider requires Terraform v0.10.2 or higher to
 run.
 
 Note that you need to run `terraform init` to fetch the provider before
-deploying. Read about the provider split and other changes to TF v0.13.0 in the
-official release announcement found [here][tf-0.13-announce].
+deploying. Read about the provider split and other changes to TF v0.15.0 in the
+official release announcement found [here][tf-0.15-announce].
 
-[tf-0.13-announce]: https://www.hashicorp.com/blog/announcing-the-terraform-0-13-beta/
+[tf-0.15-announce]: https://www.hashicorp.com/blog/announcing-hashicorp-terraform-0-15-general-availability
 
 ## Full Provider Documentation
 
@@ -41,15 +41,20 @@ how to get started with writing configuration for vSphere resources.
 ### Controlling the provider version
 
 Note that you can also control the provider version. This requires the use of a
-`provider` block in your Terraform configuration if you have not added one
-already.
+`terraform` block in your Terraform configuration if you have not added one
+already. Normally this block is in the versions.tf inside your module or your main.tf file.
 
 The syntax is as follows:
 
 ```hcl
-provider "vmworkstation" {
-  version = "~> 0.1.0"
-  ...
+terraform {
+  required_providers {
+    vmworkstation = {
+      source  = "elsudano/vmworkstation"
+      version = "0.2.1"
+    }
+  }
+  required_version = ">= 0.14.5"
 }
 ```
 
@@ -104,13 +109,20 @@ export VMWS_DEBUG=true
 
 ## Installing the Local Plugin
 
-After the build is complete, copy the `terraform-provider-vmworkstation` binary into
-the same path as your `terraform` binary, and re-run `terraform init`.
+After the build is complete, you need configure the .terraformrc file in you home for indicate
+which is the correct path where is the binary.
 
-After this, your project-local `.terraform/plugins/ARCH/lock.json` (where `ARCH`
-matches the architecture of your machine) file should contain a SHA256 sum that
-matches the local plugin. Run `shasum -a 256` on the binary to verify the values
-match.
+Please run the following commands to complete this tasks:
+
+```sh
+nano .terraformrc
+now put inside this blocks
+
+  dev_overrides {
+      "elsudano/vmworkstation" = "/complete/path/where/is/the/binary/file"
+  }
+  direct {}
+```
 
 # Developing the Provider
 
@@ -134,7 +146,9 @@ See [Building the Provider](#building-the-provider) for details on building the 
 
 # Testing the Provider
 
-**NOTE:** Pending
+Please you want try the provider, download from [Registry Provider Link][latest-version]
+
+[latest-version] https://registry.terraform.io/providers/elsudano/vmworkstation/latest
 
 ## Configuring Environment Variables
 
