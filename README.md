@@ -116,7 +116,7 @@ Please run the following commands to complete this tasks:
 
 ```sh
 nano .terraformrc
-now put inside this blocks
+now put inside these blocks
 
   dev_overrides {
       "elsudano/vmworkstation" = "/complete/path/where/is/the/binary/file"
@@ -148,7 +148,7 @@ See [Building the Provider](#building-the-provider) for details on building the 
 
 Please you want try the provider, download from [Registry Provider Link][latest-version]
 
-[latest-version] https://registry.terraform.io/providers/elsudano/vmworkstation/latest
+[latest-version]: https://registry.terraform.io/providers/elsudano/vmworkstation/latest
 
 ## Configuring Environment Variables
 
