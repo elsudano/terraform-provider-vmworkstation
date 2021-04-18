@@ -2,6 +2,3 @@
 \releases/
 \publish_files/
 \terraform-provider*
-
-# for Go Lang
-*.sum

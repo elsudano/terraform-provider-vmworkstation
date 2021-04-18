@@ -85,6 +85,22 @@ build the provider.
 cd $GOPATH/src/github.com/elsudano/terraform-provider-vmworkstation
 make build
 ```
+## Debbuging
+
+To debbug the differents issues in the provider, please use the environment variable TF_LOG_PATH
+
+Normaly, you can enable the logs in Terraform setting this two environment vars:
+
+```sh
+export TF_LOG=TRACE # INFO, DEBUG, TRACE
+export TF_LOG_PATH="terraform.log"
+```
+
+Also, you can enable the debug flag for the VMWORKSTATION provider setting the environment var:
+
+```sh
+export VMWS_DEBUG=true
+```
 
 ## Installing the Local Plugin
 

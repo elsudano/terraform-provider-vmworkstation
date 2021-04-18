@@ -37,6 +37,11 @@ func resourceVMWSVm() *schema.Resource {
 				Required:    true,
 				Description: "Little bit description of the instance",
 			},
+			"path": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Path absolute of the VM machine",
+			},
 			// "image": {
 			// 	Type:        schema.TypeString,
 			// 	Required:    true,
@@ -61,6 +66,7 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	sourceid := d.Get("sourceid").(string)
 	denomination := d.Get("denomination").(string)
 	description := d.Get("description").(string)
+	path := d.Get("path").(string)
 	// image := d.Get("image").(string)
 	processors := d.Get("processors").(int)
 	memory := d.Get("memory").(int)
@@ -69,14 +75,23 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("\t denomination: %#v\n", denomination)
 	log.Printf("\t description: %#v\n", description)
 	// log.Printf("\t image: %#v\n", image)
+	log.Printf("\t path: %#v\n", path)
 	log.Printf("\t processors: %#v\n", processors)
 	log.Printf("\t memory: %#v\n", memory)
-	VM, err := apiClient.CreateVM(sourceid, denomination)
+	VM, err := apiClient.CreateVM(sourceid, denomination, description)
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	if err != nil {
 		d.SetId("")
 		return nil
 	}
 	VM, err = apiClient.UpdateVM(VM.IdVM, denomination, description, processors, memory)
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
+	if err != nil {
+		d.SetId("")
+		return nil
+	}
+	VM, err = apiClient.RegisterVM(denomination, path)
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	if err != nil {
 		d.SetId("")
 		return nil

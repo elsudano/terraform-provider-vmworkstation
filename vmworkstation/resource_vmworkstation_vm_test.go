@@ -38,8 +38,7 @@ func testAccCheckVMDestroy(s *terraform.State) error {
 		if rs.Type != "example_item" {
 			continue
 		}
-
-		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"])
+		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"], rs.Primary.Attributes["description"])
 		if err == nil {
 			return fmt.Errorf("Alert still exists")
 		}
@@ -63,7 +62,7 @@ func testAccCheckVMExists(resource string) resource.TestCheckFunc {
 			return fmt.Errorf("No Record ID is set")
 		}
 		apiClient := testAccProvider.Meta().(*wsapiclient.Client)
-		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"])
+		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"], rs.Primary.Attributes["description"])
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}

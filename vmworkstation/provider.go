@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
+// Provider method is the entry point to use the provider
 func Provider() terraform.ResourceProvider {
 	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
@@ -56,14 +57,15 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
+// providerConfigure this method give a new configuration object to use with the client
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config, err := NewConfig(d)
 	if err != nil {
 		return nil, err
 	}
-	my_client, err := config.Client()
-	// my_client.SwitchDebug()
+	myClient, err := config.Client()
+	// myClient.SwitchDebug()
 	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d)
 	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", config)
-	return my_client, err
+	return myClient, err
 }
