@@ -1,4 +1,3 @@
 # for binaries
-
-\publish_files/
 \terraform-provider*
+dist/
