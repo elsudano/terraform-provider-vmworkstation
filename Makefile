@@ -29,7 +29,7 @@ install: build ## Copy binary to the project and det SHA256SUM in the config of 
 	@ls -lahr $(SIGNFILES)
 
 publish: install --compress ## This option prepare the zip files to publishing in Terraform Registry
-#@export GPG_FINGERPRINT=$(shell gpg --armor --export-secret-keys | tr -d \\n);
+	@gpg --armor --export-secret-keys > private.gpg
 	@goreleaser release --rm-dist # --snapshot
 #@cd $(SIGNFILES); sha256sum *.zip > $(SHAFILE)
 #@cd $(SIGNFILES); gpg -q --detach-sign $(SHAFILE)
@@ -38,6 +38,7 @@ clean: ## Clean the project, this only remove default config of API REST VmWare 
 	@git tag -d v$(VERSION)
 	@rm -f $(BINARY) $(BINARY).exe
 	@rm -fR $(SIGNFILES)*
+	@rm -f private.gpg
 
 #-------------------------------------------------------#
 #    Private Functions                                  #
