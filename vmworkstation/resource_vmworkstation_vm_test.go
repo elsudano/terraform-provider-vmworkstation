@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestAccItem_Basic(t *testing.T) {
@@ -22,8 +22,8 @@ func TestAccItem_Basic(t *testing.T) {
 					testAccCheckVMExists("example_item.test_vm"),
 					resource.TestCheckResourceAttr("example_item.test_vm", "name", "test"),
 					resource.TestCheckResourceAttr("example_item.test_vm", "description", "hello"),
-					// resource.TestCheckResourceAttr("example_item.test_vm", "tags.#", "2"),
-					// resource.TestCheckResourceAttr("example_item.test_vm", "tags.1931743815", "tag1"),
+					resource.TestCheckResourceAttr("example_item.test_vm", "processors", "2"),
+					resource.TestCheckResourceAttr("example_item.test_vm", "memory", "1024"),
 					// resource.TestCheckResourceAttr("example_item.test_vm", "tags.1477001604", "tag2"),
 				),
 			},
@@ -38,7 +38,7 @@ func testAccCheckVMDestroy(s *terraform.State) error {
 		if rs.Type != "example_item" {
 			continue
 		}
-		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"], rs.Primary.Attributes["description"])
+		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"], rs.Primary.Attributes["description"], 2, 1024)
 		if err == nil {
 			return fmt.Errorf("Alert still exists")
 		}
@@ -62,7 +62,7 @@ func testAccCheckVMExists(resource string) resource.TestCheckFunc {
 			return fmt.Errorf("No Record ID is set")
 		}
 		apiClient := testAccProvider.Meta().(*wsapiclient.Client)
-		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"], rs.Primary.Attributes["description"])
+		_, err := apiClient.CreateVM(rs.Primary.ID, rs.Primary.Attributes["name"], rs.Primary.Attributes["description"], 2, 1024)
 		if err != nil {
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}

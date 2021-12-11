@@ -1,7 +1,7 @@
 package vmworkstation
 
 import (
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceVMWSFolder() *schema.Resource {
@@ -27,7 +27,7 @@ func resourceVMWSFolder() *schema.Resource {
 }
 
 func resourceVMWSFolderCreate(d *schema.ResourceData, m interface{}) error {
-	return resourceVMWSFolderCreate(d, m)
+	return nil
 }
 
 func resourceVMWSFolderRead(d *schema.ResourceData, m interface{}) error {
@@ -35,7 +35,7 @@ func resourceVMWSFolderRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceVMWSFolderUpdate(d *schema.ResourceData, m interface{}) error {
-	return resourceVMWSFolderUpdate(d, m)
+	return nil
 }
 
 func resourceVMWSFolderDelete(d *schema.ResourceData, m interface{}) error {

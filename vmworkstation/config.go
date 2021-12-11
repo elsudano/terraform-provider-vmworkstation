@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // Config this struct is to storage the data of configuration to the web client
@@ -20,7 +20,7 @@ type Config struct {
 // NewConfig_bak this method is usefull tu create a new config for the client without parameters
 func NewConfig(d *schema.ResourceData) (*Config, error) {
 	if d.Get("user").(string) == "" || d.Get("password").(string) == "" || d.Get("url").(string) == "" {
-		err := fmt.Errorf("User, Password and URL that required parameters")
+		err := fmt.Errorf("user, password and URL that required parameters")
 		return nil, err
 	}
 	config := &Config{

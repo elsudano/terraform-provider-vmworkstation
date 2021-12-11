@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/elsudano/terraform-provider-vmworkstation/vmworkstation"
-	"github.com/hashicorp/terraform/plugin"
+	"github.com/hashicorp/terraform-plugin-sdk/plugin"
 )
 
 func main() {
