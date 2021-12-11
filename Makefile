@@ -42,7 +42,7 @@ clean: ## Clean the project, this only remove default config of API REST VmWare 
 #    Private Functions                                  #
 #-------------------------------------------------------#
 --compress:
-	@zip -q $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_linux_$(ARCH).zip $(BINARY)
-	@zip -q $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_windows_$(ARCH).zip $(BINARY).exe
+	@zip -q $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_linux_$(ARCH).zip $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_linux_$(ARCH)$(BINARY)
+	@zip -q $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_windows_$(ARCH).zip $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_windows_$(ARCH)$(BINARY).exe
 
 .PHONY = $(PHONY)
