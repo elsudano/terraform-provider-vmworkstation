@@ -1,3 +1,4 @@
 # for binaries
 \terraform-provider*
 dist/
+*.gpg
