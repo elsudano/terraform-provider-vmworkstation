@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceVMWSVm() *schema.Resource {
@@ -78,13 +78,7 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("\t path: %#v\n", path)
 	log.Printf("\t processors: %#v\n", processors)
 	log.Printf("\t memory: %#v\n", memory)
-	VM, err := apiClient.CreateVM(sourceid, denomination, description)
-	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
-	if err != nil {
-		d.SetId("")
-		return nil
-	}
-	VM, err = apiClient.UpdateVM(VM.IdVM, denomination, description, processors, memory)
+	VM, err := apiClient.CreateVM(sourceid, denomination, description, processors, memory)
 	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	if err != nil {
 		d.SetId("")
@@ -135,7 +129,7 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		if VM, err = apiClient.UpdateVM(d.Id(), d.Get("denomination").(string), VM.Description, VM.CPU.Processors, VM.Memory); err != nil {
 			return nil
 		}
-		d.SetPartial("denomination")
+		// d.SetPartial("denomination")
 		log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: denomination field in VM after %#v\n", VM.Denomination)
 	}
 	if d.HasChange("description") {
@@ -146,7 +140,7 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		if VM, err = apiClient.UpdateVM(d.Id(), VM.Denomination, d.Get("description").(string), VM.CPU.Processors, VM.Memory); err != nil {
 			return nil
 		}
-		d.SetPartial("denomination")
+		// d.SetPartial("denomination")
 		log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Description field in VM after %#v\n", VM.Description)
 	}
 	if d.HasChange("processors") {
@@ -157,7 +151,7 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		if VM, err = apiClient.UpdateVM(d.Id(), VM.Denomination, VM.Description, d.Get("processors").(int), VM.Memory); err != nil {
 			return nil
 		}
-		d.SetPartial("processors")
+		// d.SetPartial("processors")
 		log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Processors field in VM after %#v\n", VM.CPU.Processors)
 	}
 	if d.HasChange("memory") {
@@ -168,7 +162,7 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		if VM, err = apiClient.UpdateVM(d.Id(), VM.Denomination, VM.Description, VM.CPU.Processors, d.Get("memory").(int)); err != nil {
 			return nil
 		}
-		d.SetPartial("memory")
+		// d.SetPartial("memory")
 		log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Memory field in VM after %#v\n", VM.Memory)
 	}
 	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj:DataScheme %#v\n", d)
