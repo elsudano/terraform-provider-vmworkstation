@@ -79,11 +79,11 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("\t processors: %#v\n", processors)
 	log.Printf("\t memory: %#v\n", memory)
 	VM, err := apiClient.CreateVM(sourceid, denomination, description, processors, memory)
-	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	if err != nil {
 		d.SetId("")
 		return nil
 	}
+	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	VM, err = apiClient.RegisterVM(denomination, path)
 	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	if err != nil {
