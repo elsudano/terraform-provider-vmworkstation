@@ -24,8 +24,8 @@ build: ## Build the binary of the module
 	@goreleaser build --clean
 
 install: build ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment for both Terraform 0.12 and 0.13_beta2
-	@echo When you to be develop a provider, is better use the ~/.terraformrc file
-	@cat ~/.terraformrc | grep -B 5 -A 2 $(NAME)
+	@echo When you are developing a provider, is better use the ~/.terraformrc file
+	@cat ~/.terraformrc | grep -B 2 -A 2 $(NAME)
 	@ls -lahr $(SIGNFILES)
 
 publish: install --compress ## This option prepare the zip files to publishing in Terraform Registry
