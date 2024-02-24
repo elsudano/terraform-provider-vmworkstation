@@ -30,7 +30,7 @@ install: build ## Copy binary to the project and det SHA256SUM in the config of 
 
 publish: install --compress ## This option prepare the zip files to publishing in Terraform Registry
 	@gpg --armor --export-secret-keys > private.gpg
-	@goreleaser release --rm-dist --skip-publish # --snapshot
+	@goreleaser release --clean --skip-publish # --snapshot
 #@cd $(SIGNFILES); sha256sum *.zip > $(SHAFILE)
 #@cd $(SIGNFILES); gpg -q --detach-sign $(SHAFILE)
 
