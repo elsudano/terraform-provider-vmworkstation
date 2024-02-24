@@ -28,23 +28,14 @@ install: build ## Copy binary to the project and det SHA256SUM in the config of 
 	@cat ~/.terraformrc | grep -B 2 -A 2 $(NAME)
 	@ls -lahr $(SIGNFILES)
 
-publish: install --compress ## This option prepare the zip files to publishing in Terraform Registry
+publish: install ## This option prepare the zip files to publishing in Terraform Registry
 	@gpg --armor --export-secret-keys > private.gpg
 	@goreleaser release --clean --skip=publish # --snapshot
-#@cd $(SIGNFILES); sha256sum *.zip > $(SHAFILE)
-#@cd $(SIGNFILES); gpg -q --detach-sign $(SHAFILE)
 
 clean: ## Clean the project, this only remove default config of API REST VmWare Workstation Pro, the cert, private key and binary
 	@git tag -d v$(VERSION)
 	@rm -f $(BINARY) $(BINARY).exe
 	@rm -fR $(SIGNFILES)*
 	@rm -f private.gpg
-
-#-------------------------------------------------------#
-#    Private Functions                                  #
-#-------------------------------------------------------#
---compress:
-	@zip -q $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_linux_$(ARCH).zip $(SIGNFILES)$(PREFIX)-$(NAME)_linux_$(ARCH)/$(BINARY)
-	@zip -q $(SIGNFILES)$(PREFIX)-$(NAME)_$(VERSION)_windows_$(ARCH).zip $(SIGNFILES)$(PREFIX)-$(NAME)_windows_$(ARCH)/$(BINARY).exe
 
 .PHONY = $(PHONY)
