@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 
 CONFIG_FILE = binary_config.ini
-ARCH = amd64
+ARCH = amd64_v1
 SIGNFILES = dist/
 PREFIX = $(shell cat $(CONFIG_FILE) | grep "PREFIX=" | tr -d "PREFIX=")
 NAME = $(shell cat $(CONFIG_FILE) | grep "NAME=" | tr -d "NAME=")
