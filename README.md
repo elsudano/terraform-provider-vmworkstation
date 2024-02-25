@@ -51,7 +51,7 @@ terraform {
   required_providers {
     vmworkstation = {
       source  = "elsudano/vmworkstation"
-      version = "0.2.2"
+      version = "1.0.4"
     }
   }
   required_version = ">= 0.15.4"
