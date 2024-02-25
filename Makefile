@@ -30,6 +30,7 @@ install: build ## Copy binary to the project and det SHA256SUM in the config of 
 
 publish: install ## This option prepare the zip files to publishing in Terraform Registry
 	@gpg --armor --export-secret-keys > private.gpg
+	@export GPG_FINGERPRINT=$(gpg -k | head -4 | tail -1 | tr -d " ")
 	@goreleaser release --clean --skip=publish # --snapshot
 
 clean: ## Clean the project, this only remove default config of API REST VmWare Workstation Pro, the cert, private key and binary
