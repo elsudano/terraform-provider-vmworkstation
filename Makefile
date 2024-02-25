@@ -25,12 +25,13 @@ build: ## Build the binary of the module
 
 install: build ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment for both Terraform 0.12 and 0.13_beta2
 	@echo When you are developing a provider, is better use the ~/.terraformrc file
+	@echo "Before to publish you need run this command: export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")"
 	@cat ~/.terraformrc | grep -B 2 -A 2 $(NAME)
 	@ls -lahr $(SIGNFILES)
 
 publish: install ## This option prepare the zip files to publishing in Terraform Registry
 	@gpg --armor --export-secret-keys > private.gpg
-	@GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " "); goreleaser release --clean --skip=publish # --snapshot
+	@goreleaser release --clean --skip=publish # --snapshot
 	@git push --tags
 
 clean: ## Clean the project, this only remove default config of API REST VmWare Workstation Pro, the cert, private key and binary
