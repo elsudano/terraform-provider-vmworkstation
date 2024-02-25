@@ -1,6 +1,6 @@
 module github.com/elsudano/terraform-provider-vmworkstation
 
-go 1.18
+go 1.20
 
 require (
 	github.com/elsudano/vmware-workstation-api-client v1.0.9
