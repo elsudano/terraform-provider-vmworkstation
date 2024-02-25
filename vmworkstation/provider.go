@@ -53,7 +53,7 @@ func Provider() terraform.ResourceProvider {
 		},
 		ConfigureFunc: providerConfigure,
 	}
-	// log.Printf("[VMWS] Fi: provider.go Fu: Provider Obj:%#v\n", provider)
+	// log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: Provider Obj:%#v\n", provider)
 	return provider
 }
 
@@ -65,7 +65,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 	myClient, err := config.Client()
 	// myClient.SwitchDebug()
-	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d)
-	log.Printf("[VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", config)
+	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d)
+	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", config)
 	return myClient, err
 }
