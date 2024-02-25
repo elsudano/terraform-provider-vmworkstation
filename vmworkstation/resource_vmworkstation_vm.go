@@ -81,7 +81,7 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	VM, err := apiClient.CreateVM(sourceid, denomination, description, processors, memory)
 	if err != nil {
 		d.SetId("")
-		return nil
+		return err
 	}
 	log.Printf("[VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	VM, err = apiClient.RegisterVM(denomination, path)
