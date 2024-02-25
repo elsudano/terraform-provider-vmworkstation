@@ -81,14 +81,15 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	VM, err := apiClient.CreateVM(sourceid, denomination, description, processors, memory)
 	if err != nil {
 		d.SetId("")
+		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Creating VM: %#v\n", err)
 		return err
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	VM, err = apiClient.RegisterVM(denomination, path)
-	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	if err != nil {
 		d.SetId("")
-		return nil
+		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Registering VM: %#v\n", err)
+		return err
 	}
 	d.SetId(VM.IdVM)
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Obj:ID of new VM %#v\n", VM.IdVM)
@@ -100,7 +101,8 @@ func resourceVMWSVmRead(d *schema.ResourceData, m interface{}) error {
 	VM, err := apiClient.ReadVM(d.Id())
 	if err != nil {
 		d.SetId("")
-		return nil
+		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmRead Error Reading VM: %#v\n", err)
+		return err
 	}
 	d.SetId(VM.IdVM)
 	d.Set("denomination", VM.Denomination)
@@ -117,7 +119,8 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 	VM, err := apiClient.ReadVM(d.Id())
 	if err != nil {
 		d.SetId("")
-		return nil
+		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Reading VM: %#v\n", err)
+		return err
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: VM to Update %#v\n", VM)
 	d.Partial(true) // this is such as to a semaphore, it's a switch to change a state of blocked
@@ -127,7 +130,8 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: New value of Denomination %#v\n", DenominationNewState)
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: denomination field in VM before %#v\n", VM.Denomination)
 		if VM, err = apiClient.UpdateVM(d.Id(), d.Get("denomination").(string), VM.Description, VM.CPU.Processors, VM.Memory); err != nil {
-			return nil
+			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Changing Denomination: %#v\n", err)
+			return err
 		}
 		// d.SetPartial("denomination")
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: denomination field in VM after %#v\n", VM.Denomination)
@@ -138,7 +142,8 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: New value of Description %#v\n", DescriptionNewState)
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Description field in VM before %#v\n", VM.Description)
 		if VM, err = apiClient.UpdateVM(d.Id(), VM.Denomination, d.Get("description").(string), VM.CPU.Processors, VM.Memory); err != nil {
-			return nil
+			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Changing Description: %#v\n", err)
+			return err
 		}
 		// d.SetPartial("denomination")
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Description field in VM after %#v\n", VM.Description)
@@ -149,7 +154,8 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: New value of Processors %#v\n", ProcessorsNewState)
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Processors field in VM before %#v\n", VM.CPU.Processors)
 		if VM, err = apiClient.UpdateVM(d.Id(), VM.Denomination, VM.Description, d.Get("processors").(int), VM.Memory); err != nil {
-			return nil
+			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Changing CPU %#v\n", err)
+			return err
 		}
 		// d.SetPartial("processors")
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Processors field in VM after %#v\n", VM.CPU.Processors)
@@ -160,7 +166,8 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: New value of Memory %#v\n", MemoryNewState)
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Memory field in VM before %#v\n", VM.Memory)
 		if VM, err = apiClient.UpdateVM(d.Id(), VM.Denomination, VM.Description, VM.CPU.Processors, d.Get("memory").(int)); err != nil {
-			return nil
+			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Changing Memory: %#v\n", err)
+			return err
 		}
 		// d.SetPartial("memory")
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Memory field in VM after %#v\n", VM.Memory)
@@ -174,8 +181,8 @@ func resourceVMWSVmDelete(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*wsapiclient.Client)
 	err := apiClient.DeleteVM(d.Id())
 	if err != nil {
-		log.Printf("[VMWS][ERROR] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmDelete Obj:%#v\n", err)
-		return nil
+		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmDelete Obj:%#v\n", err)
+		return err
 	}
 	d.SetId("")
 	return nil
