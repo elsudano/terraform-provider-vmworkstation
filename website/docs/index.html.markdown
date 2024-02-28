@@ -32,6 +32,9 @@ The provider configuration block accepts the following arguments. In general, it
 ##### 2.- *password*
 > (Required) Matcnhing password for the user to authenticate in the API REST of VmWare Workstation. It is recommended to be set via VMWS_PASSWORD environment variable.
 
+##### 3.- *path*
+> (Required) This is the path where the VmWare Workstation software save the vitual machines when we was creating, so ideally, there is the place to save all the instances that we will create. I t you want to use a Windows path like "D:\Virtual Machines" You will need scape the slash like that "D:\\\Virtual Machines", in Linux isn't necessary.
+
 ##### 3.- *url*
 > (Required) This is the URL where the API REST of VmWare Workstation are listen, normally in "https://localhost:8697/api". It is recommended to be set via VMWS_URL environment variable.
 
@@ -51,7 +54,7 @@ terraform {
   required_providers {
     vmworkstation = {
       source  = "elsudano/vmworkstation"
-      version = "0.2.1"
+      version = "1.0.4"
     }
   }
 }
@@ -105,16 +108,24 @@ variable "vmws_reource_frontend_memory" {
   default     = "512"
 }
 ```
+
+### Useful commands in order to obtain the SourceID or ParentID
+
+Kee in mind that you will be able to change the gaps about of the password, user and localhost server if is necessary
+
+```bash
+curl -k 'https://localhost:8697/api/vms' -u '<User>:<Password>' -X GET --header 'Accept: application/vnd.vmware.vmw.rest-v1+json'
+```
+
 ### Useful commands to handle the infrastructure:
 
 ```bash
 export VMWS_USER="xxxx"; \
 export VMWS_PASSWORD="xxxx"; \
 export VMWS_URL="https://localhost:8697/api"; \
-ansible-vault decrypt terraform/vault/vmw.tfvars; \
-terraform plan -state=terraform/envi/vmw/terraform.tfstate -var-file=terraform/vault/vmw.tfvars terraform/envi/vmw/; \
-ansible-vault encrypt terraform/vault/vmw.tfvars
+terraform plan 
 ```
+
 ### Session persistence options
 
 ### Debugging options
