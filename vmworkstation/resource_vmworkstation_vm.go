@@ -29,11 +29,13 @@ func resourceVMWSVm() *schema.Resource {
 			},
 			"denomination": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Required:    false,
 				Description: "The name of the resource",
 			},
 			"description": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Required:    false,
 				Description: "Little bit description of the instance",
 			},
