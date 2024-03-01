@@ -119,7 +119,7 @@ func resourceVMWSVmRead(d *schema.ResourceData, m interface{}) error {
 	// d.Set("image", VM.Image)
 	d.Set("processors", VM.CPU.Processors)
 	d.Set("memory", VM.Memory)
-	// d.Set("ip", VM.Ip)
+	d.Set("ip", VM.Ip)
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmRead Obj:One VM %#v\n", VM)
 	return nil
 }
