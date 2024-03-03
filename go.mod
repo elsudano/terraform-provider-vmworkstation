@@ -3,7 +3,7 @@ module github.com/elsudano/terraform-provider-vmworkstation
 go 1.20
 
 require (
-	github.com/elsudano/vmware-workstation-api-client v1.0.10
+	github.com/elsudano/vmware-workstation-api-client v1.0.11
 	github.com/hashicorp/terraform-plugin-sdk v1.17.2
 )
 
@@ -20,7 +20,7 @@ require (
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
-	github.com/aws/aws-sdk-go v1.50.29 // indirect
+	github.com/aws/aws-sdk-go v1.50.30 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
