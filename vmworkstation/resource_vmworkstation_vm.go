@@ -59,6 +59,12 @@ func resourceVMWSVm() *schema.Resource {
 				Required:    true,
 				Description: "How much memory will have the VM",
 			},
+			"state": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Required:    false,
+				Description: "How much memory will have the VM",
+			},
 			"ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -77,6 +83,7 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	// image := d.Get("image").(string)
 	processors := d.Get("processors").(int)
 	memory := d.Get("memory").(int)
+	state := d.Get("state").(string)
 	ip := d.Get("ip").(string)
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob:\n")
 	log.Printf("sourceid: %#v\n", sourceid)
@@ -86,6 +93,7 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("path: %#v\n", path)
 	log.Printf("processors: %#v\n", processors)
 	log.Printf("memory: %#v\n", memory)
+	log.Printf("state: %#v\n", state)
 	log.Printf("IP: %#v\n", ip)
 	VM, err := apiClient.CreateVM(sourceid, denomination, description, processors, memory)
 	if err != nil {
@@ -119,6 +127,7 @@ func resourceVMWSVmRead(d *schema.ResourceData, m interface{}) error {
 	// d.Set("image", VM.Image)
 	d.Set("processors", VM.CPU.Processors)
 	d.Set("memory", VM.Memory)
+	d.Set("state", VM.PowerStatus)
 	d.Set("ip", VM.Ip)
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmRead Obj:One VM %#v\n", VM)
 	return nil
