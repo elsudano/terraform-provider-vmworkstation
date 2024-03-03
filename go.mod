@@ -3,7 +3,7 @@ module github.com/elsudano/terraform-provider-vmworkstation
 go 1.20
 
 require (
-	github.com/elsudano/vmware-workstation-api-client v1.0.11
+	github.com/elsudano/vmware-workstation-api-client v1.0.12
 	github.com/hashicorp/terraform-plugin-sdk v1.17.2
 )
 

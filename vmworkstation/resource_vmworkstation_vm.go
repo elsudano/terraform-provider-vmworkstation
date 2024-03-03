@@ -216,6 +216,9 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceVMWSVmDelete(d *schema.ResourceData, m interface{}) error {
+	// We have to check if the instance is powered on
+	// because before to remove we need tp make sure that
+	// is shutdown
 	apiClient := m.(*wsapiclient.Client)
 	err := apiClient.DeleteVM(d.Id())
 	if err != nil {

@@ -20,6 +20,8 @@ help:
 	{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build: ## Build the binary of the module
+	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
+	@export GOPRIVATE=/home/usuario/go/src/github.com/elsudano/vmware-workstation-api-client/; go get github.com/elsudano/vmware-workstation-api-client
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
@@ -28,9 +30,14 @@ install: build ## Copy binary to the project and det SHA256SUM in the config of 
 	@echo "Before to publish you need run these commands:"
 	@cat ~/.terraformrc | grep -B 2 -A 2 $(NAME)
 	@ls -lahr $(SIGNFILES)
-	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
+
 
 publish: install ## This option prepare the zip files to publishing in Terraform Registry
+	@go get -u
+	@go mod tidy
+	@git add .
+	@git commit -m "chore: We have updated the dependencies"
+	@git push
 	@gpg --armor --export-secret-keys > private.gpg
 	@goreleaser release --clean --skip=publish # --snapshot
 	@git push --tags
