@@ -206,7 +206,7 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Changing Memory: %#v\n", err)
 			return err
 		}
-		// d.SetPartial("memory")
+		// d.SetPartial("state")
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Memory field in VM after %#v\n", VM.Memory)
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj:DataScheme %#v\n", d)
@@ -215,9 +215,6 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceVMWSVmDelete(d *schema.ResourceData, m interface{}) error {
-	// We have to check if the instance is powered on
-	// because before to remove we need tp make sure that
-	// is shutdown
 	apiClient := m.(*wsapiclient.Client)
 	err := apiClient.DeleteVM(d.Id())
 	if err != nil {
