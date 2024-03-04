@@ -22,9 +22,9 @@ help:
 build: ## Build the binary of the module
 	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@export GOPRIVATE=github.com/elsudano/vmware-workstation-api-client; go get github.com/elsudano/vmware-workstation-api-client@$(shell git -C ../vmware-workstation-api-client/ tag --sort=committerdate | tail -1)
-	@git tag v$(VERSION)
 	@git add go.*
 	@git commit -m "update: We have updated dependencies before to build"
+	@git tag v$(VERSION)
 	@goreleaser build --clean
 
 install: build ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment for both Terraform 0.12 and 0.13_beta2
