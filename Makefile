@@ -19,11 +19,13 @@ help:
 	| sort | awk 'BEGIN {FS = ":.*?## "}; \
 	{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-build: ## Build the binary of the module
+prepare: ## Prepare the environment in order to build the provider
 	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@export GOPRIVATE=github.com/elsudano/vmware-workstation-api-client; go get github.com/elsudano/vmware-workstation-api-client@$(shell git -C ../vmware-workstation-api-client/ tag --sort=committerdate | tail -1)
-	@git add go.*
+	@git add .
 	@git commit -m "update: We have updated dependencies before to build"
+
+build: prepare ## Build the binary of the module
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
