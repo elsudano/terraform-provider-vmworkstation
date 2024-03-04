@@ -21,7 +21,7 @@ help:
 
 build: ## Build the binary of the module
 	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
-	@export GOPRIVATE=/home/usuario/go/src/github.com/elsudano/vmware-workstation-api-client/; go get github.com/elsudano/vmware-workstation-api-client
+	@export GOPRIVATE=github.com/elsudano/vmware-workstation-api-client; go get github.com/elsudano/vmware-workstation-api-client@$(shell git -C ../vmware-workstation-api-client/ tag --sort=committerdate | tail -1)
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
