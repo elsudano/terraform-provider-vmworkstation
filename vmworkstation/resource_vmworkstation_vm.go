@@ -62,7 +62,6 @@ func resourceVMWSVm() *schema.Resource {
 			"state": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Required:    false,
 				Description: "Which will be the state of the VM when we will deploy it",
 			},
 			"ip": {
