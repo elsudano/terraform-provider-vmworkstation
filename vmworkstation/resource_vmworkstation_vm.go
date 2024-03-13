@@ -148,7 +148,7 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: VM to Update %#v\n", VM)
-	d.Partial(true) // this is such as to a semaphore, it's a switch to change a state of blocked
+	// d.Partial(true) // this is such as to a semaphore, it's a switch to change a state of blocked
 	if d.HasChange("denomination") {
 		DenominationOldState, DenominationNewState := d.GetChange("denomination")
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Old value of Denomination %#v\n", DenominationOldState)
@@ -203,14 +203,14 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: New value of State %#v\n", NewState)
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: State field in VM before %#v\n", VM.PowerStatus)
 		if VM, err = apiClient.UpdateVM(d.Id(), VM.Denomination, VM.Description, VM.CPU.Processors, VM.Memory, d.Get("state").(string)); err != nil {
-			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Changing Memory: %#v\n", err)
+			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Changing Power State: %#v\n", err)
 			return err
 		}
 		// d.SetPartial("state")
 		log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj: Memory field in VM after %#v\n", VM.Memory)
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj:DataScheme %#v\n", d)
-	d.Partial(false) // this is such as to a semaphore, it's a switch to change a state of unblocked
+	// d.Partial(false) // this is such as to a semaphore, it's a switch to change a state of unblocked
 	return resourceVMWSVmRead(d, m)
 }
 
@@ -239,6 +239,7 @@ func resourceVMWSVmExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	if VM == nil {
 		return false, nil
 	}
+	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmExists Obj:VM %#v\n", VM)
 	return true, nil
 }
 
