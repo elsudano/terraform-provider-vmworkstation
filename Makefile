@@ -22,10 +22,12 @@ help:
 prepare: ## Prepare the environment in order to build the provider
 	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@export GOPRIVATE=github.com/elsudano/vmware-workstation-api-client; go get github.com/elsudano/vmware-workstation-api-client@$(shell git -C ../vmware-workstation-api-client/ tag --sort=committerdate | tail -1)
-	@git add .
-	@git commit -m "update: We have updated dependencies before to build"
+	@go get -u
+	@go mod tidy	
 
 build: prepare ## Build the binary of the module
+	@git add .
+	@git commit -m "update: We have updated dependencies before to build"
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
