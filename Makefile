@@ -30,7 +30,7 @@ build: prepare ## Build the binary of the module
 
 publish: build ## This option prepare the zip files to publishing in Terraform Registry
 	@git add .
-	@git commit -m "chore: We have updated the dependencies"
+	@git commit -m "feat: We have created a new version v$(VERSION)"
 	@git push
 	@gpg --armor --export-secret-keys > private.gpg
 	@goreleaser release --clean --skip=publish # --snapshot
