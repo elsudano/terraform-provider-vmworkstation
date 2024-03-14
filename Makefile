@@ -28,7 +28,7 @@ build: prepare ## Build the binary of the module
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
-publish: build ## This option prepare the zip files to publishing in Terraform Registry
+publish: ## This option prepare the zip files to publishing in Terraform Registry
 	@git add .
 	@git commit -m "feat: We have created a new version v$(VERSION)"
 	@git push
