@@ -37,6 +37,7 @@ publish: ## This option prepare the zip files to publishing in Terraform Registr
 	@gpg --armor --export-secret-keys > private.gpg
 	@goreleaser release --clean --skip=publish # --snapshot
 	@git push --tags
+	@cp terraform-registry-manifest.json ./dist/terraform-provider-vmworkstation_$(VERSION)_manifest.json 
 
 clean: ## Clean the project, this only remove default config of API REST VmWare Workstation Pro, the cert, private key and binary
 	@git tag -d v$(VERSION)
