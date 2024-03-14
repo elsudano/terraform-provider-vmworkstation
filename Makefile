@@ -25,8 +25,6 @@ prepare: ## Prepare the environment in order to build the provider
 	@go mod tidy	
 
 build: prepare ## Build the binary of the module
-	@git add .
-	@git commit -m "update: We have updated dependencies before to build"
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
@@ -38,8 +36,6 @@ install: build ## Copy binary to the project and det SHA256SUM in the config of 
 
 
 publish: install ## This option prepare the zip files to publishing in Terraform Registry
-	@go get -u
-	@go mod tidy
 	@git add .
 	@git commit -m "chore: We have updated the dependencies"
 	@git push
