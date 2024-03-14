@@ -27,6 +27,7 @@ build: prepare ## Build the binary of the module
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
+.ONESHELL:
 publish: ## This option prepare the zip files to publishing in Terraform Registry
 	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@git add .
