@@ -29,9 +29,9 @@ build: prepare ## Build the binary of the module
 	@goreleaser build --clean
 
 publish: ## This option prepare the zip files to publishing in Terraform Registry
-	@git tag v$(VERSION)
 	@git add .
 	@git commit -m "feat: We have created a new version v$(VERSION)"
+	@git tag v$(VERSION)
 	@git push
 	@gpg --armor --export-secret-keys > private.gpg
 	@goreleaser release --clean --skip=publish # --snapshot
