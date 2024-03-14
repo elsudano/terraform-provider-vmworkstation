@@ -19,17 +19,19 @@ help:
 	| sort | awk 'BEGIN {FS = ":.*?## "}; \
 	{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-build: ## Build the binary of the module
+prepare: ## Prepare the environment in order to build the provider
+	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
+	@go get -u
+	@go mod tidy	
+
+build: prepare ## Build the binary of the module
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
-install: build ## Copy binary to the project and det SHA256SUM in the config of project, NOTE: Just for Dev. environment for both Terraform 0.12 and 0.13_beta2
-	@echo When you are developing a provider, is better use the ~/.terraformrc file
-	@echo "Before to publish you need run this command: export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")"
-	@cat ~/.terraformrc | grep -B 2 -A 2 $(NAME)
-	@ls -lahr $(SIGNFILES)
-
-publish: install ## This option prepare the zip files to publishing in Terraform Registry
+publish: build ## This option prepare the zip files to publishing in Terraform Registry
+	@git add .
+	@git commit -m "feat: We have created a new version v$(VERSION)"
+	@git push
 	@gpg --armor --export-secret-keys > private.gpg
 	@goreleaser release --clean --skip=publish # --snapshot
 	@git push --tags

@@ -123,7 +123,7 @@ Please run the following commands to complete this tasks:
 
 ```sh
 nano .terraformrc
-now put inside these blocks
+# now put inside these blocks
 
   dev_overrides {
       "elsudano/vmworkstation" = "/complete/path/where/is/the/binary/file"
