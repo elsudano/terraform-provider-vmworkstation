@@ -20,7 +20,6 @@ help:
 	{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 prepare: ## Prepare the environment in order to build the provider
-	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@go get -u
 	@go mod tidy	
 
@@ -29,6 +28,7 @@ build: prepare ## Build the binary of the module
 	@goreleaser build --clean
 
 publish: ## This option prepare the zip files to publishing in Terraform Registry
+	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@git add .
 	@git commit -m "feat: We have created a new version v$(VERSION)"
 	@git tag v$(VERSION)
