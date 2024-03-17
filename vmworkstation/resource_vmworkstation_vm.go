@@ -108,12 +108,15 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: After to Powerized %#v\n", VM.IdVM)
-	VM, err = apiClient.RegisterVM(denomination, path)
-	if err != nil {
-		d.SetId("")
-		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Registering VM: %#v\n", err)
-		return err
-	}
+	// We want to wait to integrate this feature until to the API permit UnRegister the VM on the Library
+	// We have decided that, because, if we register the VM in the Library, after that when we remove
+	// the VM, it will be removed from the filesystem but, it still on the VM Library
+	// VM, err = apiClient.RegisterVM(denomination, path)
+	// if err != nil {
+	// 	d.SetId("")
+	// 	log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Registering VM: %#v\n", err)
+	// 	return err
+	// }
 	d.SetId(VM.IdVM)
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Obj:ID of new VM %#v\n", VM.IdVM)
 	return resourceVMWSVmRead(d, m)
