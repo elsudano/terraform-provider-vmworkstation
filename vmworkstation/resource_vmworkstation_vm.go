@@ -1,8 +1,10 @@
 package vmworkstation
 
 import (
+	"errors"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -75,6 +77,8 @@ func resourceVMWSVm() *schema.Resource {
 
 func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*wsapiclient.Client)
+	VM := new(wsapiclient.MyVm)
+	err := errors.New("")
 	sourceid := d.Get("sourceid").(string)
 	denomination := d.Get("denomination").(string)
 	description := d.Get("description").(string)
@@ -94,11 +98,16 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("memory: %#v\n", memory)
 	log.Printf("state: %#v\n", state)
 	log.Printf("IP: %#v\n", ip)
-	VM, err := apiClient.CreateVM(sourceid, denomination, description, processors, memory)
-	if err != nil {
-		d.SetId("")
-		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Creating VM: %#v\n", err)
-		return err
+	for {
+		VM, err = apiClient.CreateVM(sourceid, denomination, description, processors, memory)
+		if err == nil {
+			break
+		} else {
+			d.SetId("")
+			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Creating VM: %#v\n", err)
+			time.Sleep(15 * time.Second)
+			log.Print("[INFO][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate We are waiting for 15 seconds, and we will try again")
+		}
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	VM, err = apiClient.PowerSwitch(VM.IdVM, state)
