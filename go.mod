@@ -5,7 +5,7 @@ go 1.20
 replace github.com/elsudano/vmware-workstation-api-client => ../vmware-workstation-api-client
 
 require (
-	github.com/elsudano/vmware-workstation-api-client v1.0.15
+	github.com/elsudano/vmware-workstation-api-client v1.1.17
 	github.com/hashicorp/terraform-plugin-sdk v1.17.2
 )
 

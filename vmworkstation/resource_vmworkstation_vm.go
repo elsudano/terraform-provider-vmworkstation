@@ -110,7 +110,7 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
-	VM, err = apiClient.PowerSwitch(VM.IdVM, state)
+	err = apiClient.PowerSwitch(VM, state)
 	if err != nil {
 		d.SetId("")
 		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Powerized VM: %#v\n", err)
@@ -133,7 +133,7 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 
 func resourceVMWSVmRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*wsapiclient.Client)
-	VM, err := apiClient.ReadVM(d.Id())
+	VM, err := apiClient.LoadVM(d.Id())
 	if err != nil {
 		d.SetId("")
 		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmRead Error Reading VM: %#v\n", err)
@@ -146,14 +146,14 @@ func resourceVMWSVmRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("processors", VM.CPU.Processors)
 	d.Set("memory", VM.Memory)
 	d.Set("state", VM.PowerStatus)
-	d.Set("ip", VM.Ip)
+	d.Set("ip", VM.NICS[0].Ip)
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmRead Obj:One VM %#v\n", VM)
 	return nil
 }
 
 func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*wsapiclient.Client)
-	VM, err := apiClient.ReadVM(d.Id())
+	VM, err := apiClient.LoadVM(d.Id())
 	if err != nil {
 		d.SetId("")
 		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Error Reading VM: %#v\n", err)
@@ -207,7 +207,7 @@ func resourceVMWSVmDelete(d *schema.ResourceData, m interface{}) error {
 
 func resourceVMWSVmExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	apiClient := m.(*wsapiclient.Client)
-	VM, err := apiClient.ReadVM(d.Id())
+	VM, err := apiClient.LoadVM(d.Id())
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			return false, nil
