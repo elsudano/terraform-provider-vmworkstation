@@ -98,25 +98,30 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	log.Printf("memory: %#v\n", memory)
 	log.Printf("state: %#v\n", state)
 	log.Printf("IP: %#v\n", ip)
+	count := 1
 	for {
 		VM, err = apiClient.CreateVM(sourceid, denomination, description, processors, memory)
 		if err == nil {
 			break
 		} else {
 			d.SetId("")
-			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Creating VM: %#v\n", err)
-			time.Sleep(15 * time.Second)
-			log.Print("[INFO][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate We are waiting for 15 seconds, and we will try again")
+			log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Creating VM %d times: %#v\n", count, err)
+			time.Sleep(10 * time.Second)
+			log.Print("[INFO][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate We are waiting for 10 seconds, and we will try again")
+			if count > 4 {
+				return err
+			}
+			count++
 		}
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: %#v\n", VM.IdVM)
 	err = apiClient.PowerSwitch(VM, state)
 	if err != nil {
 		d.SetId("")
-		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Powerized VM: %#v\n", err)
+		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Error Energizing VM: %#v\n", err)
 		return err
 	}
-	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Ob: After to Powerized %#v\n", VM.IdVM)
+	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate After to Energized %#v\n", VM.IdVM)
 	// We want to wait to integrate this feature until to the API permit UnRegister the VM on the Library
 	// We have decided that, because, if we register the VM in the Library, after that when we remove
 	// the VM, it will be removed from the filesystem but, it still on the VM Library
@@ -127,13 +132,13 @@ func resourceVMWSVmCreate(d *schema.ResourceData, m interface{}) error {
 	// 	return err
 	// }
 	d.SetId(VM.IdVM)
-	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate Obj:ID of new VM %#v\n", VM.IdVM)
-	return resourceVMWSVmRead(d, m)
+	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmCreate ID of new VM %#v\n", VM.IdVM)
+	return nil
+	// return resourceVMWSVmRead(d, m)
 }
 
 func resourceVMWSVmRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*wsapiclient.Client)
-	VM, err := apiClient.LoadVM(d.Id())
+	VM, err := m.(*wsapiclient.Client).LoadVM(d.Id())
 	if err != nil {
 		d.SetId("")
 		log.Printf("[ERROR][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmRead Error Reading VM: %#v\n", err)
@@ -191,7 +196,8 @@ func resourceVMWSVmUpdate(d *schema.ResourceData, m interface{}) error {
 	}
 	log.Printf("[DEBUG][VMWS] Fi: resource_vmworkstation_vm.go Fu: resourceVMWSVmUpdate Obj:DataScheme %#v\n", d)
 	d.Partial(false) // this is such as to a semaphore, it's a switch to change a state of unblocked
-	return resourceVMWSVmRead(d, m)
+	return nil
+	// return resourceVMWSVmRead(d, m)
 }
 
 func resourceVMWSVmDelete(d *schema.ResourceData, m interface{}) error {

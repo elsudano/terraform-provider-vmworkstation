@@ -14,7 +14,7 @@ type Config struct {
 	Password     string
 	URL          string
 	InsecureFlag bool
-	Debug        bool
+	Debug        string
 }
 
 // NewConfig_bak this method is usefull tu create a new config for the client without parameters
@@ -28,7 +28,7 @@ func NewConfig(d *schema.ResourceData) (*Config, error) {
 		Password:     d.Get("password").(string),
 		URL:          d.Get("url").(string),
 		InsecureFlag: d.Get("https").(bool),
-		Debug:        d.Get("debug").(bool),
+		Debug:        d.Get("debug").(string),
 	}
 	// log.Printf("[DEBUG][VMWS] Fi: config.go Fu: NewConfig Obj:%#v\n", config)
 	return config, nil
