@@ -38,9 +38,9 @@ func Provider() terraform.ResourceProvider {
 				Description: "When this have set to true the 'url' connect to over https",
 			},
 			"debug": {
-				Type:        schema.TypeBool,
+				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("VMWS_DEBUG", false),
+				DefaultFunc: schema.EnvDefaultFunc("VMWS_DEBUG", nil),
 				Description: "Enable debug for find errors",
 			},
 		},
@@ -53,7 +53,7 @@ func Provider() terraform.ResourceProvider {
 		},
 		ConfigureFunc: providerConfigure,
 	}
-	// log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: Provider Obj:%#v\n", provider)
+	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: Provider Obj:%#v\n", provider)
 	return provider
 }
 
@@ -65,7 +65,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 	myClient, err := config.Client()
 	// myClient.SwitchDebug()
-	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d)
+	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d.State().String())
 	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", config)
 	return myClient, err
 }
