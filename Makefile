@@ -23,7 +23,16 @@ prepare: ## Prepare the environment in order to build the provider
 	@go get -u
 	@go mod tidy	
 
-build: prepare ## Build the binary of the module
+format: prepare ## We can check if the format of our code is correct or not
+	@gofmt -s -w -e .
+
+test:
+	go test -v -cover -timeout=120s -parallel=10 ./...
+
+testacc: test ## We can 
+	TF_ACC=1 go test -v -cover -timeout 120m ./...
+
+build: testacc ## Build the binary of the module
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 

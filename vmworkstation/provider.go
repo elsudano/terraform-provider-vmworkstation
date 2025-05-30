@@ -1,71 +1,136 @@
 package vmworkstation
 
 import (
-	"log"
+	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
+	"github.com/hashicorp/terraform-plugin-framework/function"
+	"github.com/hashicorp/terraform-plugin-framework/provider"
+	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// Provider method is the entry point to use the provider
-func Provider() terraform.ResourceProvider {
-	provider := &schema.Provider{
-		Schema: map[string]*schema.Schema{
-			"user": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("VMWS_USER", nil),
-				Description: "The user name for VMWare Workstation Pro API REST operations.",
-				Sensitive:   true,
-			},
-			"password": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("VMWS_PASSWORD", nil),
-				Description: "The user password for VMWare Workstation Pro API REST operations.",
-				Sensitive:   true,
-			},
-			"url": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("VMWS_URL", nil),
-				Description: "The URL for connect to the API REST",
-			},
-			"https": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("VMWS_HTTPS", true),
-				Description: "When this have set to true the 'url' connect to over https",
-			},
-			"debug": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("VMWS_DEBUG", nil),
-				Description: "Enable debug for find errors",
-			},
-		},
-		ResourcesMap: map[string]*schema.Resource{
-			"vmworkstation_vm":     resourceVMWSVm(),
-			"vmworkstation_folder": resourceVMWSFolder(),
-		},
-		DataSourcesMap: map[string]*schema.Resource{
-			"vmworkstation_folder": datasourceVMWSFolder(),
-		},
-		ConfigureFunc: providerConfigure,
-	}
-	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: Provider Obj:%#v\n", provider)
-	return provider
+var _ provider.Provider = &VMWProvider{}
+var _ provider.ProviderWithFunctions = &VMWProvider{}
+var _ provider.ProviderWithEphemeralResources = &VMWProvider{}
+
+type VMWProvider struct {
+	// version is set to the provider version on release, "dev" when the
+	// provider is built and ran locally, and "test" when running acceptance
+	// testing.
+	version string
 }
 
-// providerConfigure this method give a new configuration object to use with the client
-func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	config, err := NewConfig(d)
-	if err != nil {
-		return nil, err
+type VMWProviderModel struct {
+	Endpoint types.String `tfsdk:"endpoint"`
+	User     types.String `tfsdk:"user"`
+	Password types.String `tfsdk:"password"`
+	HTTPS    types.Bool   `tfsdk:"https"`
+	Debug    types.String `tfsdk:"debug"`
+}
+
+func (p *VMWProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "vmws"
+	resp.Version = p.version
+}
+
+func (p *VMWProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Attributes: map[string]schema.Attribute{
+			"endpoint": schema.StringAttribute{
+				MarkdownDescription: "The URL for connect to the API REST.",
+				Required:            true,
+				Optional:            false,
+				Sensitive:           false,
+				Description:         "The URL for connect to the API REST.",
+				DeprecationMessage:  "",
+				Validators:          []validator.String{},
+			},
+			"user": schema.StringAttribute{
+				MarkdownDescription: "The user to use in the API calls.", // string,
+				Required:            true,                                // bool,
+				Optional:            false,                               // bool,
+				Sensitive:           false,                               // bool,
+				Description:         "The user to use in the API calls.", // string,
+				DeprecationMessage:  "",                                  // string,
+				Validators:          []validator.String{},                //[]validator.String
+			},
+			"password": schema.StringAttribute{
+				MarkdownDescription: "The user password for VMWare Workstation Pro API REST operations.",
+				Required:            true,
+				Optional:            false,
+				Sensitive:           true,
+				Description:         "The user password for VMWare Workstation Pro API REST operations.",
+				DeprecationMessage:  "",
+				Validators:          []validator.String{},
+			},
+			"https": schema.BoolAttribute{
+				MarkdownDescription: "When this have set to true the 'url' connect to over https.",
+				Required:            false,
+				Optional:            true,
+				Sensitive:           false,
+				Description:         "When this have set to true the 'url' connect to over https.",
+				DeprecationMessage:  "",
+			},
+			"debug": schema.StringAttribute{
+				MarkdownDescription: "Enable debug for find errors.",
+				Required:            false,
+				Optional:            true,
+				Sensitive:           false,
+				Description:         "Enable debug for find errors.",
+				DeprecationMessage:  "",
+				Validators:          []validator.String{},
+			},
+		},
 	}
-	myClient, err := config.Client()
-	// myClient.SwitchDebug()
-	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", d.State().String())
-	log.Printf("[DEBUG][VMWS] Fi: provider.go Fu: providerConfigure Obj:%#v\n", config)
-	return myClient, err
+}
+
+func (p *VMWProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data VMWProviderModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	client, err := wsapiclient.NewClient(data.Endpoint.String(), data.User.String(), data.Password.String(), data.HTTPS.ValueBool(), data.Debug.String())
+	if err != nil {
+		return
+	}
+	resp.DataSourceData = client
+	resp.ResourceData = client
+}
+
+func (p *VMWProvider) Resources(ctx context.Context) []func() resource.Resource {
+	return []func() resource.Resource{
+		NewVMResource,
+	}
+}
+
+func (p *VMWProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
+	return []func() ephemeral.EphemeralResource{
+		NewVMEphemeralResource,
+	}
+}
+
+func (p *VMWProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+	return []func() datasource.DataSource{
+		NewVMDataSource,
+	}
+}
+
+func (p *VMWProvider) Functions(ctx context.Context) []func() function.Function {
+	return []func() function.Function{
+		NewVMFunction,
+	}
+}
+
+func New(version string) func() provider.Provider {
+	return func() provider.Provider {
+		return &VMWProvider{
+			version: version,
+		}
+	}
 }

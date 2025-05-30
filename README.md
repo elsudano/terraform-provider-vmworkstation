@@ -9,10 +9,6 @@ with Terraform to work with [VMware Workstation][vmware-workstation] Products.
 
 [vmware-workstation]: https://www.vmware.com/products/workstation-pro.html
 
-This provider is inpirated on [vSphere Provider][vmware-vsphere]
-
-[vmware-vsphere]: https://github.com/terraform-providers/terraform-provider-vsphere
-
 For general information about Terraform, visit the [official
 website][tf-website] and the [GitHub project page][tf-github].
 
@@ -21,7 +17,7 @@ website][tf-website] and the [GitHub project page][tf-github].
 
 # Using the Provider
 
-The current version of this provider requires Terraform v0.10.2 or higher to
+The current version of this provider requires Terraform v1.0.0 or higher to
 run.
 
 Note that you need to run `terraform init` to fetch the provider before

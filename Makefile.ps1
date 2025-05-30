@@ -1,3 +1,5 @@
+# Copyright (c) HashiCorp, Inc.
+
 [string]${OS} = "windows"
 [string]${ARCH} = "amd64"
 [string]$SIGNFILES = "publish_files/"
