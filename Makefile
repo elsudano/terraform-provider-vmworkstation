@@ -26,8 +26,11 @@ prepare: ## Prepare the environment in order to build the provider.
 format: prepare ## We can check if the format of our code is correct or not.
 	@gofmt -s -w -e .
 
+documentation: format ## We can generate the documentation of this provider
+	cd tools; go generate ./...
+
 .ONESHELL:
-test: format ## We can run the test of provider directly.
+test: documentation ## We can run the test of provider directly.
 	@export TF_ACC=1
 	@go test -v -cover -timeout=120s -parallel=10 ./...
 
