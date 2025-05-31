@@ -75,6 +75,14 @@ func TestAccVMResource(t *testing.T) {
 
 func testAccVMResourceConfig(configurableAttribute string) string {
 	return fmt.Sprintf(`
+provider "vmworkstation" {
+	endpoint = "https://192.168.1.155:8697/api"
+	username = "Admin"
+	password = "Adm1n#01"
+	https    = "true"
+	debug    = "NONE"
+}
+
 resource "vmworkstation_resource" "vm1" {
   configurable_attribute = %[1]q
 }
