@@ -13,7 +13,6 @@ import (
 
 func TestAccVMEphemeralResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		// Ephemeral resources are only available in 1.10 and later
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
 			tfversion.SkipBelow(tfversion.Version1_10_0),
 		},
@@ -36,12 +35,20 @@ func TestAccVMEphemeralResource(t *testing.T) {
 
 func testAccVMEphemeralResourceConfig(configurableAttribute string) string {
 	return fmt.Sprintf(`
-ephemeral "scaffolding_example" "test" {
+ephemeral "vmworkstation_ephemeral" "vm1" {
   configurable_attribute = %[1]q
 }
 
+provider "vmworkstation" {
+  endpoint = "https://192.168.1.155:8697/api"
+  username = "Admin"
+  password = "Adm1n#01"
+  https    = "true"
+  debug    = "NONE"
+}
+
 provider "echo" {
-  data = ephemeral.scaffolding_example.test
+  data = ephemeral.vmworkstation_ephemeral.vm1
 }
 
 resource "echo" "test" {}

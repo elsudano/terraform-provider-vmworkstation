@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/tfversion"
 )
 
-func TestExampleFunction_Known(t *testing.T) {
+func TestVMFunction_Known(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
 			tfversion.SkipBelow(tfversion.Version1_8_0),
@@ -19,8 +19,16 @@ func TestExampleFunction_Known(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: `
+				provider "vmworkstation" {
+					endpoint = "https://192.168.1.155:8697/api"
+					username = "Admin"
+					password = "Adm1n#01"
+					https    = "true"
+					debug    = "NONE"
+				}
+
 				output "test" {
-					value = provider::scaffolding::example("testvalue")
+					value = provider::vmworkstation::vm1("testvalue")
 				}
 				`,
 				ConfigStateChecks: []statecheck.StateCheck{
@@ -34,7 +42,7 @@ func TestExampleFunction_Known(t *testing.T) {
 	})
 }
 
-func TestExampleFunction_Null(t *testing.T) {
+func TestVMFunction_Null(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
 			tfversion.SkipBelow(tfversion.Version1_8_0),
@@ -43,8 +51,16 @@ func TestExampleFunction_Null(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: `
+				provider "vmworkstation" {
+					endpoint = "https://192.168.1.155:8697/api"
+					username = "Admin"
+					password = "Adm1n#01"
+					https    = "true"
+					debug    = "NONE"
+				}
+
 				output "test" {
-					value = provider::scaffolding::example(null)
+					value = provider::vmworkstation::vm1(null)
 				}
 				`,
 				// The parameter does not enable AllowNullValue
@@ -54,7 +70,7 @@ func TestExampleFunction_Null(t *testing.T) {
 	})
 }
 
-func TestExampleFunction_Unknown(t *testing.T) {
+func TestVMFunction_Unknown(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
 			tfversion.SkipBelow(tfversion.Version1_8_0),
@@ -63,12 +79,20 @@ func TestExampleFunction_Unknown(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: `
+				provider "vmworkstation" {
+					endpoint = "https://192.168.1.155:8697/api"
+					username = "Admin"
+					password = "Adm1n#01"
+					https    = "true"
+					debug    = "NONE"
+				}
+
 				resource "terraform_data" "test" {
 					input = "testvalue"
 				}
 				
 				output "test" {
-					value = provider::scaffolding::example(terraform_data.test.output)
+					value = provider::vmworkstation::vm1(terraform_data.test.output)
 				}
 				`,
 				ConfigStateChecks: []statecheck.StateCheck{

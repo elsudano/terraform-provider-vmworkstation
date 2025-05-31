@@ -17,7 +17,7 @@ func NewVMFunction() function.Function {
 type VMFunction struct{}
 
 func (r VMFunction) Metadata(_ context.Context, req function.MetadataRequest, resp *function.MetadataResponse) {
-	resp.Name = "example"
+	resp.Name = "vm1"
 }
 
 func (r VMFunction) Definition(_ context.Context, _ function.DefinitionRequest, resp *function.DefinitionResponse) {

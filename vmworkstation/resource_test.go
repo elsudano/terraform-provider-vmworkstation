@@ -20,17 +20,17 @@ func TestAccVMResource(t *testing.T) {
 				Config: testAccVMResourceConfig("one"),
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
-						"scaffolding_example.test",
+						"vmworkstation_resource.vm1",
 						tfjsonpath.New("id"),
 						knownvalue.StringExact("example-id"),
 					),
 					statecheck.ExpectKnownValue(
-						"scaffolding_example.test",
+						"vmworkstation_resource.vm1",
 						tfjsonpath.New("defaulted"),
 						knownvalue.StringExact("example value when not configured"),
 					),
 					statecheck.ExpectKnownValue(
-						"scaffolding_example.test",
+						"vmworkstation_resource.vm1",
 						tfjsonpath.New("configurable_attribute"),
 						knownvalue.StringExact("one"),
 					),
@@ -38,7 +38,7 @@ func TestAccVMResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "scaffolding_example.test",
+				ResourceName:      "vmworkstation_resource.vm1",
 				ImportState:       true,
 				ImportStateVerify: true,
 				// This is not normally necessary, but is here because this
@@ -52,17 +52,17 @@ func TestAccVMResource(t *testing.T) {
 				Config: testAccVMResourceConfig("two"),
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
-						"scaffolding_example.test",
+						"vmworkstation_resource.vm1",
 						tfjsonpath.New("id"),
 						knownvalue.StringExact("example-id"),
 					),
 					statecheck.ExpectKnownValue(
-						"scaffolding_example.test",
+						"vmworkstation_resource.vm1",
 						tfjsonpath.New("defaulted"),
 						knownvalue.StringExact("example value when not configured"),
 					),
 					statecheck.ExpectKnownValue(
-						"scaffolding_example.test",
+						"vmworkstation_resource.vm1",
 						tfjsonpath.New("configurable_attribute"),
 						knownvalue.StringExact("two"),
 					),
@@ -75,7 +75,7 @@ func TestAccVMResource(t *testing.T) {
 
 func testAccVMResourceConfig(configurableAttribute string) string {
 	return fmt.Sprintf(`
-resource "scaffolding_example" "test" {
+resource "vmworkstation_resource" "vm1" {
   configurable_attribute = %[1]q
 }
 `, configurableAttribute)

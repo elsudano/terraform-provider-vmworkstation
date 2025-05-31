@@ -27,7 +27,7 @@ type VMDataSourceModel struct {
 }
 
 func (d *VMDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_example"
+	resp.TypeName = req.ProviderTypeName + "_datasource"
 }
 
 func (d *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -61,10 +61,8 @@ func (d *VMDataSource) Configure(ctx context.Context, req datasource.ConfigureRe
 			"Unexpected Data Source Configure Type",
 			fmt.Sprintf("Expected *http.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
-
 		return
 	}
-
 	d.client = client
 }
 

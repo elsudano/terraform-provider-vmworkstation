@@ -9,17 +9,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
 )
 
-func TestAccExampleDataSource(t *testing.T) {
+func TestAccVMDataSource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Read testing
 			{
-				Config: testAccExampleDataSourceConfig,
+				Config: testAccVMDataSourceConfig,
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
-						"data.scaffolding_example.test",
+						"data.vmworkstation_datasource.vm1",
 						tfjsonpath.New("id"),
 						knownvalue.StringExact("example-id"),
 					),
@@ -29,8 +29,16 @@ func TestAccExampleDataSource(t *testing.T) {
 	})
 }
 
-const testAccExampleDataSourceConfig = `
-data "scaffolding_example" "test" {
+const testAccVMDataSourceConfig = `
+provider "vmworkstation" {
+  endpoint = "https://192.168.1.155:8697/api"
+  username = "Admin"
+  password = "Adm1n#01"
+  https    = "true"
+  debug    = "NONE"
+}
+
+data "vmworkstation_datasource" "vm1" {
   configurable_attribute = "example"
 }
 `
