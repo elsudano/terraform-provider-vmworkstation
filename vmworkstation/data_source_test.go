@@ -20,7 +20,7 @@ func TestAccVMDataSource(t *testing.T) {
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
 						"data.vmworkstation_datasource_vm.vm1",
-						tfjsonpath.New("sourceid"),
+						tfjsonpath.New("id"),
 						knownvalue.StringExact("545OMDAL1R520604HKNKA6TTK6TBNOHK"),
 					),
 				},
@@ -31,14 +31,14 @@ func TestAccVMDataSource(t *testing.T) {
 
 const testAccVMDataSourceConfig = `
 provider "vmworkstation" {
-  endpoint = "https://192.168.1.155:8697/api"
+  endpoint = "https://localhost:8697/api"
   username = "Admin"
   password = "Adm1n#01"
   https    = "true"
-  debug    = "NONE"
+  debug    = "DEBUG"
 }
 
 data "vmworkstation_datasource_vm" "vm1" {
-  sourceid = "545OMDAL1R520604HKNKA6TTK6TBNOHK"
+  id = "545OMDAL1R520604HKNKA6TTK6TBNOHK"
 }
 `

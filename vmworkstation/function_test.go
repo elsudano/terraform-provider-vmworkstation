@@ -80,11 +80,11 @@ func TestVMFunction_Unknown(t *testing.T) {
 			{
 				Config: `
 				provider "vmworkstation" {
-					endpoint = "https://192.168.1.155:8697/api"
-					username = "Admin"
-					password = "Adm1n#01"
-					https    = "true"
-					debug    = "NONE"
+				  endpoint = "https://localhost:8697/api"
+				  username = "Admin"
+				  password = "Adm1n#01"
+				  https    = "true"
+				  debug    = "DEBUG"
 				}
 
 				resource "terraform_data" "test" {

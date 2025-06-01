@@ -40,11 +40,11 @@ ephemeral "vmworkstation_ephemeral" "vm1" {
 }
 
 provider "vmworkstation" {
-  endpoint = "https://192.168.1.155:8697/api"
+  endpoint = "https://localhost:8697/api"
   username = "Admin"
   password = "Adm1n#01"
   https    = "true"
-  debug    = "NONE"
+  debug    = "DEBUG"
 }
 
 provider "echo" {
