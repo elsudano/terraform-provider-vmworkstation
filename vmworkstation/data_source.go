@@ -7,7 +7,6 @@ import (
 	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -24,9 +23,14 @@ type VMDataSource struct {
 }
 
 type VMDataSourceModel struct {
-	Id       types.String `tfsdk:"id"`
-	SourceID types.String `tfsdk:"sourceid"`
-	Ip       types.String `tfsdk:"ip"`
+	Id           types.String `tfsdk:"id"`
+	Denomination types.String `tfsdk:"denomination"`
+	Description  types.String `tfsdk:"description"`
+	Path         types.String `tfsdk:"path"`
+	Processors   types.Int32  `tfsdk:"processors"`
+	Memory       types.Int32  `tfsdk:"memory"`
+	State        types.String `tfsdk:"state"`
+	Ip           types.String `tfsdk:"ip"`
 }
 
 func (r *VMDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -38,16 +42,39 @@ func (r *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest,
 		MarkdownDescription: "We can read a VM of VmWare Workstation with this kind of data source.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Required:            true,
-				Optional:            false,
+				Computed:            true,
 				Description:         "That will be the ID of this VM.",
 				MarkdownDescription: "When the VM is created the VMWare Workstation Provider assign a new ID at this VM.",
 			},
-			"sourceid": schema.StringAttribute{
+			"denomination": schema.StringAttribute{
 				Computed:            true,
-				Description:         "The ID of the VM that to use for clone at the new.",
-				MarkdownDescription: "The VmWare Workstation Provider needs a ID of a created VM to clone this VM in the new one with the new parameters.",
-				Validators:          []validator.String{},
+				Description:         "The name of the VM.",
+				MarkdownDescription: "This will be the name that we can see in the VmWare Workstation.",
+			},
+			"description": schema.StringAttribute{
+				Computed:            true,
+				Description:         "Little bit description of the VM",
+				MarkdownDescription: "Here will have all the description about of the VM, e.g. extra information regarding the purpose of the VM or which is the user and pass of the VM.",
+			},
+			"path": schema.StringAttribute{
+				Computed:            true,
+				Description:         "Absolute path of the VM machine",
+				MarkdownDescription: "Where is the folder where we have the .vmx file of the VM, normally we have this file in the default folder of the VmWare Workstation config.",
+			},
+			"processors": schema.Int32Attribute{
+				Computed:            true,
+				Description:         "Number of processors that will have the VM",
+				MarkdownDescription: "This will be the amount of Processors that the VM will have.",
+			},
+			"memory": schema.Int32Attribute{
+				Computed:            true,
+				Description:         "How much memory will have the VM",
+				MarkdownDescription: "This will be the amount of Memory that the VM will have.",
+			},
+			"state": schema.StringAttribute{
+				Computed:            true,
+				Description:         "Which will be the state of the VM when we will deploy it",
+				MarkdownDescription: "That will be state of the VM, that's means that we can have a PowerON VM (on) or a PowerOFF VM (off).",
 			},
 			"ip": schema.StringAttribute{
 				Computed:            true,
@@ -84,24 +111,25 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	VM, err := r.client.LoadVM(data.Id.ValueString())
+	VM, err := r.client.GetVMbyName("parentvm")
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
 		return
 	}
 	tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
-	data.SourceID = types.StringValue(VM.IdVM)
+	data.Id = types.StringValue(VM.IdVM)
+	data.Denomination = types.StringValue(VM.Denomination)
+	data.Description = types.StringValue(VM.Description)
+	data.Path = types.StringValue(VM.Path)
+	data.Processors = types.Int32Value(VM.CPU.Processors)
+	data.Memory = types.Int32Value(VM.Memory)
+	data.State = types.StringValue(VM.PowerStatus)
+	// data.Ip = types.StringValue(VM.NICS)
 	data.Ip = types.StringValue("0.0.0.0/0")
-
-	// For the purposes of this example code, hardcoding a response value to
-	// save into the Terraform state.
-	// data.Id = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
-	// data.SourceID = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
-	// data.Ip = types.StringValue("0.0.0.0/0")
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
-	tflog.Info(ctx, "We have read the data source")
+	tflog.Info(ctx, "We have read the VM")
 
 	// Save data into Terraform state
 	diags = resp.State.Set(ctx, &data)
