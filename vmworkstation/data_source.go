@@ -24,28 +24,32 @@ type VMDataSource struct {
 }
 
 type VMDataSourceModel struct {
+	Id       types.String `tfsdk:"id"`
 	SourceID types.String `tfsdk:"sourceid"`
-	IP       types.String `tfsdk:"ip"`
+	Ip       types.String `tfsdk:"ip"`
 }
 
-func (d *VMDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (r *VMDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_datasource_vm"
 }
 
-func (d *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (r *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "We can read a VM of VmWare Workstation with this kind of data source.",
 		Attributes: map[string]schema.Attribute{
-			"sourceid": schema.StringAttribute{
+			"id": schema.StringAttribute{
 				Required:            true,
 				Optional:            false,
+				Description:         "That will be the ID of this VM.",
+				MarkdownDescription: "When the VM is created the VMWare Workstation Provider assign a new ID at this VM.",
+			},
+			"sourceid": schema.StringAttribute{
+				Computed:            true,
 				Description:         "The ID of the VM that to use for clone at the new.",
-				MarkdownDescription: "The ID of the VM that to use for clone at the new.",
+				MarkdownDescription: "The VmWare Workstation Provider needs a ID of a created VM to clone this VM in the new one with the new parameters.",
 				Validators:          []validator.String{},
 			},
 			"ip": schema.StringAttribute{
-				Required:            false,
-				Optional:            false,
 				Computed:            true,
 				Description:         "Which is the IP of the instance",
 				MarkdownDescription: "When the VM is in PowerON state, we can see which IP have the VM in order to connect with the VM.",
@@ -54,7 +58,7 @@ func (d *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest,
 	}
 }
 
-func (d *VMDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (r *VMDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -67,10 +71,10 @@ func (d *VMDataSource) Configure(ctx context.Context, req datasource.ConfigureRe
 		)
 		return
 	}
-	d.client = client
+	r.client = client
 }
 
-func (d *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data VMDataSourceModel
 	// Read Terraform configuration data into the model
 	diags := req.Config.Get(ctx, &data)
@@ -80,19 +84,25 @@ func (d *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	// httpResp, err := d.client.Do(httpReq)
+	// VM, err := r.client.LoadVM(data.Id.String())
 	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read example, got error: %s", err))
-	//     return
+	// 	resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
+	// 	return
 	// }
+	// tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
+	// data.SourceID = types.StringValue(VM.IdVM)
+	// data.Ip = types.StringValue("0.0.0.0/0")
 
 	// For the purposes of this example code, hardcoding a response value to
 	// save into the Terraform state.
+	data.Id = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
 	data.SourceID = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
-	data.IP = types.StringValue("0.0.0.0/0")
+	data.Ip = types.StringValue("0.0.0.0/0")
+
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
-	tflog.Trace(ctx, "read a data source")
+	tflog.Info(ctx, "We have read the data source")
+
 	// Save data into Terraform state
 	diags = resp.State.Set(ctx, &data)
 	resp.Diagnostics.Append(diags...)
