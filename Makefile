@@ -30,7 +30,7 @@ documentation: format ## We can generate the documentation of this provider
 	cd tools; go generate ./...
 
 .ONESHELL:
-test: documentation ## We can run the test of provider directly.
+test: format ## We can run the test of provider directly.
 	@export TF_ACC=1
 	@go test -v -cover -timeout=120s -parallel=10 ./...
 
