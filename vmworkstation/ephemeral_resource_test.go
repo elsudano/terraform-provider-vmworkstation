@@ -44,7 +44,7 @@ provider "vmworkstation" {
   username = "Admin"
   password = "Adm1n#01"
   https    = "true"
-  debug    = "DEBUG"
+  debug    = "NONE"
 }
 
 provider "echo" {

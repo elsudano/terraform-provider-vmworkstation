@@ -84,7 +84,7 @@ func TestVMFunction_Unknown(t *testing.T) {
 				  username = "Admin"
 				  password = "Adm1n#01"
 				  https    = "true"
-				  debug    = "DEBUG"
+				  debug    = "NONE"
 				}
 
 				resource "terraform_data" "test" {

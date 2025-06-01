@@ -157,19 +157,19 @@ func (p *VMWProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	}
 	debug := os.Getenv("VMWS_DEBUG")
 	if !data.Endpoint.IsNull() {
-		endpoint = data.Endpoint.String()
+		endpoint = data.Endpoint.ValueString()
 	}
 	if !data.Username.IsNull() {
-		username = data.Username.String()
+		username = data.Username.ValueString()
 	}
 	if !data.Password.IsNull() {
-		password = data.Password.String()
+		password = data.Password.ValueString()
 	}
 	if !data.HTTPS.IsNull() {
 		https = data.HTTPS.ValueBool()
 	}
 	if !data.Debug.IsNull() {
-		debug = data.Debug.String()
+		debug = data.Debug.ValueString()
 	}
 	// If any of the expected configurations are missing, return
 	// errors with provider-specific guidance.

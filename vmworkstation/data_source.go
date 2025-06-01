@@ -84,20 +84,20 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	// VM, err := r.client.LoadVM(data.Id.String())
-	// if err != nil {
-	// 	resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
-	// 	return
-	// }
-	// tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
-	// data.SourceID = types.StringValue(VM.IdVM)
-	// data.Ip = types.StringValue("0.0.0.0/0")
+	VM, err := r.client.LoadVM(data.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
+		return
+	}
+	tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
+	data.SourceID = types.StringValue(VM.IdVM)
+	data.Ip = types.StringValue("0.0.0.0/0")
 
 	// For the purposes of this example code, hardcoding a response value to
 	// save into the Terraform state.
-	data.Id = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
-	data.SourceID = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
-	data.Ip = types.StringValue("0.0.0.0/0")
+	// data.Id = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
+	// data.SourceID = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
+	// data.Ip = types.StringValue("0.0.0.0/0")
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log

@@ -80,7 +80,7 @@ provider "vmworkstation" {
   username = "Admin"
   password = "Adm1n#01"
   https    = "true"
-  debug    = "DEBUG"
+  debug    = "NONE"
 }
 
 resource "vmworkstation_resource_vm" "vm1" {
