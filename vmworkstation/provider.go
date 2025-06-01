@@ -147,14 +147,14 @@ func (p *VMWProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	// Default values to environment variables, but override
 	// with Terraform configuration value if set.
 	var https bool
+	endpoint := os.Getenv("VMWS_ENDPOINT")
+	username := os.Getenv("VMWS_USERNAME")
+	password := os.Getenv("VMWS_PASSWORD")
 	if os.Getenv("VMWS_HTTPS") == "true" {
 		https = true
 	} else {
 		https = false
 	}
-	endpoint := os.Getenv("VMWS_ENDPOINT")
-	username := os.Getenv("VMWS_USERNAME")
-	password := os.Getenv("VMWS_PASSWORD")
 	debug := os.Getenv("VMWS_DEBUG")
 	if !data.Endpoint.IsNull() {
 		endpoint = data.Endpoint.String()
