@@ -26,23 +26,23 @@ prepare: ## Prepare the environment in order to build the provider.
 format: prepare ## We can check if the format of our code is correct or not.
 	@gofmt -s -w -e .
 
-documentation: format ## We can generate the documentation of this provider
-	cd tools; go generate ./...
-
 .ONESHELL:
 test: format ## We can run the test of provider directly.
 	@export TF_ACC=1
 	@go test -v -cover -timeout=120s -parallel=10 ./...
+
+documentation: test ## We can generate the documentation of this provider
+	cd tools; go generate ./...
 
 build: test ## Build the binary of the module
 	@git tag v$(VERSION)
 	@goreleaser build --clean
 
 .ONESHELL:
-publish: test ## This option prepare the zip files to publishing in Terraform Registry
+publish: documentation ## This option prepare the zip files to publishing in Terraform Registry
 	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@git add .
-	@git commit -m "feat: We have created a new version v$(VERSION)"
+	@git commit -m "feat: We have released a new version v$(VERSION)"
 	@git tag v$(VERSION)
 	@git push
 	@gpg --armor --export-secret-keys > private.gpg
