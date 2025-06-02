@@ -1,3 +1,5 @@
+// Copyright (c) Carlos De La Torre CC-BY-NC-v4 (https://creativecommons.org/licenses/by-nc/4.0/)
+
 package main
 
 import (
@@ -5,7 +7,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/elsudano/terraform-provider-vmworkstation/vmworkstation"
+	vmworkstation "github.com/elsudano/terraform-provider-vmworkstation/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
 
