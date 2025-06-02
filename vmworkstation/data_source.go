@@ -111,7 +111,7 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	VM, err := r.client.GetVMbyName("parentvm")
+	VM, err := r.client.LoadVMbyName("parentvm")
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
 		return

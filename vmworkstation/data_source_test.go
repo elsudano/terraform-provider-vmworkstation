@@ -19,7 +19,7 @@ func TestAccVMDataSource(t *testing.T) {
 				Config: testAccVMDataSourceConfig,
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
-						"data.vmworkstation_datasource_vm.vm1",
+						"data.vmworkstation_datasource_vm.paramvm",
 						tfjsonpath.New("id"),
 						knownvalue.StringExact("545OMDAL1R520604HKNKA6TTK6TBNOHK"),
 					),
@@ -38,7 +38,5 @@ provider "vmworkstation" {
   debug    = "NONE"
 }
 
-data "vmworkstation_datasource_vm" "vm1" {
-  id = "545OMDAL1R520604HKNKA6TTK6TBNOHK"
-}
+data "vmworkstation_datasource_vm" "paramvm" {}
 `
