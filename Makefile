@@ -39,7 +39,7 @@ build: test ## Build the binary of the module
 	@goreleaser build --clean
 
 .ONESHELL:
-publish: ## This option prepare the zip files to publishing in Terraform Registry
+publish: test ## This option prepare the zip files to publishing in Terraform Registry
 	@export GPG_FINGERPRINT=$(shell gpg -k | head -4 | tail -1 | tr -d " ")
 	@git add .
 	@git commit -m "feat: We have created a new version v$(VERSION)"
