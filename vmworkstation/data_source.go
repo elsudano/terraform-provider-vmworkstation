@@ -119,12 +119,68 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 		return
 	}
 	tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
+	if VM.IdVM == "" {
+		resp.Diagnostics.AddError(
+			"The VM Id field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.IdVM),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Id field is: %#v", VM.IdVM))
 	data.Id = types.StringValue(VM.IdVM)
+	if VM.Denomination == "" {
+		resp.Diagnostics.AddError(
+			"The VM Denomination field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Denomination),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Denomination field is: %#v", VM.Denomination))
 	data.Denomination = types.StringValue(VM.Denomination)
+	if VM.Description == "" {
+		resp.Diagnostics.AddError(
+			"The VM Description field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Description),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Description field is: %#v", VM.Description))
 	data.Description = types.StringValue(VM.Description)
+	if VM.Path == "" {
+		resp.Diagnostics.AddError(
+			"The VM Path field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Path),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Path field is: %#v", VM.Path))
 	data.Path = types.StringValue(VM.Path)
+	if VM.CPU.Processors == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Processors field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.CPU.Processors),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Processors field is: %#v", VM.CPU.Processors))
 	data.Processors = types.Int32Value(VM.CPU.Processors)
+	if VM.Memory == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Memory field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Memory),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Memory field is: %#v", VM.Memory))
 	data.Memory = types.Int32Value(VM.Memory)
+	if VM.PowerStatus == "" {
+		resp.Diagnostics.AddError(
+			"The VM PowerStatus field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.PowerStatus),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM PowerStatus field is: %#v", VM.PowerStatus))
 	data.State = types.StringValue(VM.PowerStatus)
 	// data.Ip = types.StringValue(VM.NICS)
 	data.Ip = types.StringValue("0.0.0.0/0")
