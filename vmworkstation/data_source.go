@@ -7,6 +7,7 @@ import (
 	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -47,9 +48,10 @@ func (r *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest,
 				MarkdownDescription: "When the VM is created the VMWare Workstation Provider assign a new ID at this VM.",
 			},
 			"denomination": schema.StringAttribute{
-				Computed:            true,
+				Required:            true,
 				Description:         "The name of the VM.",
 				MarkdownDescription: "This will be the name that we can see in the VmWare Workstation.",
+				Validators:          []validator.String{},
 			},
 			"description": schema.StringAttribute{
 				Computed:            true,
@@ -111,7 +113,7 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	VM, err := r.client.LoadVMbyName("parentvm")
+	VM, err := r.client.LoadVMbyName(data.Denomination.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
 		return
