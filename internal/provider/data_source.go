@@ -1,3 +1,5 @@
+// Copyright (c) Carlos De La Torre CC-BY-NC-v4 (https://creativecommons.org/licenses/by-nc/4.0/)
+
 package vmworkstation
 
 import (
@@ -40,6 +42,7 @@ func (r *VMDataSource) Metadata(ctx context.Context, req datasource.MetadataRequ
 
 func (r *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description:         "With this item we can read all the properties that we have in our VmWare Workstation Pro folder data, this means, that we can load a VM in oru infrastructure in case that we want to change its properties.",
 		MarkdownDescription: "We can read a VM of VmWare Workstation with this kind of data source.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

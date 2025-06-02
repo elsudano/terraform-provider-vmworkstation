@@ -1,3 +1,5 @@
+// Copyright (c) Carlos De La Torre CC-BY-NC-v4 (https://creativecommons.org/licenses/by-nc/4.0/)
+
 package vmworkstation
 
 import (
@@ -47,7 +49,7 @@ func (r *VMResource) Metadata(ctx context.Context, req resource.MetadataRequest,
 func (r *VMResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Version:             1,
-		Description:         "This Resource will create a new VM within VmWare Workstation folder.",
+		Description:         "The principal resource of VmWare Workstation Pro is a Virtual Machine, with this resource we can create a clone from a VM that we had in our VmWare Workstation Pro folder.",
 		MarkdownDescription: "We can create a VM within of VmWare Workstation with this kind of resource.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

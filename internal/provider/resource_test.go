@@ -1,3 +1,5 @@
+// Copyright (c) Carlos De La Torre CC-BY-NC-v4 (https://creativecommons.org/licenses/by-nc/4.0/)
+
 package vmworkstation
 
 import (

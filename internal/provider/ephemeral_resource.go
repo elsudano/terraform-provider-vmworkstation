@@ -1,3 +1,5 @@
+// Copyright (c) Carlos De La Torre CC-BY-NC-v4 (https://creativecommons.org/licenses/by-nc/4.0/)
+
 package vmworkstation
 
 import (
@@ -29,9 +31,8 @@ func (r *VMEphemeralResource) Metadata(_ context.Context, req ephemeral.Metadata
 
 func (r *VMEphemeralResource) Schema(ctx context.Context, _ ephemeral.SchemaRequest, resp *ephemeral.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		// This description is used by the documentation generator and the language server.
+		Description:         "In case that we will need to create a Virtual Machine in VmWare Workstation Pro, but is just to make some temporal tasks we can use the Ephemeral Virtual Machine.",
 		MarkdownDescription: "Example ephemeral resource",
-
 		Attributes: map[string]schema.Attribute{
 			"configurable_attribute": schema.StringAttribute{
 				MarkdownDescription: "Example configurable attribute",

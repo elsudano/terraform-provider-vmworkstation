@@ -1,7 +1,6 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Carlos De La Torre CC-BY-NC-v4 (https://creativecommons.org/licenses/by-nc/4.0/)
 
-package provider
+package vmworkstation
 
 import (
 	"testing"
@@ -12,19 +11,19 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
 )
 
-func TestAccExampleDataSource(t *testing.T) {
+func TestAccVMDataSource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			// Read testing
 			{
-				Config: testAccExampleDataSourceConfig,
+				Config: testAccVMDataSourceConfig,
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
-						"data.scaffolding_example.test",
+						"data.vmworkstation_datasource_vm.parentvm",
 						tfjsonpath.New("id"),
-						knownvalue.StringExact("example-id"),
+						knownvalue.StringExact("545OMDAL1R520604HKNKA6TTK6TBNOHK"),
 					),
 				},
 			},
@@ -32,8 +31,16 @@ func TestAccExampleDataSource(t *testing.T) {
 	})
 }
 
-const testAccExampleDataSourceConfig = `
-data "scaffolding_example" "test" {
-  configurable_attribute = "example"
+const testAccVMDataSourceConfig = `
+provider "vmworkstation" {
+  endpoint = "https://192.168.1.155:8697/api"
+  username = "Admin"
+  password = "Adm1n#01"
+  https    = "true"
+  debug    = "NONE"
+}
+
+data "vmworkstation_datasource_vm" "parentvm" {
+  denomination = "parentvm"
 }
 `
