@@ -6,5 +6,5 @@ partition: tf-ecosystem
 summary:
   owner: Carlos de la Torre
   description: |
-    This is the repository for the Terraform VMware Workstation Pro Provider, which one can use with Terraform to work with VMware Workstation Products.
+    This is the repository for the Terraform VmWare Workstation Pro Provider, which one can use with Terraform to work with VMware Workstation Pro Products.
   visibility: public

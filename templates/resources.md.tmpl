@@ -1,0 +1,18 @@
+---
+page_title: "{{ .Type | trimspace }}: Virtual Machine"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{ .Type | trimspace }} {{ .Name | trimspace }}
+
+{{ .Description | trimspace }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Example Usage
+
+{{ .ExampleFile }}
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name) }}

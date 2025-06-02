@@ -1,0 +1,17 @@
+---
+page_title: "Provider: {{ .RenderedProviderName }}"
+description: |-
+  A Terraform provider to work with {{ .RenderedProviderName }}, allowing management of virtual machines and other VMware resources. Supports management through {{ .RenderedProviderName }}.
+---
+
+# {{ .RenderedProviderName }} Provider
+
+{{ .Description | trimspace }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Example Usage
+
+{{ .ExampleFile }}
+
+{{ tffile "examples/provider/provider.tf" }}
