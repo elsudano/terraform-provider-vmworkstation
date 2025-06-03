@@ -17,10 +17,6 @@ import (
 var _ datasource.DataSource = &VMDataSource{}
 var _ datasource.DataSourceWithConfigure = &VMDataSource{}
 
-func NewVMDataSource() datasource.DataSource {
-	return &VMDataSource{}
-}
-
 type VMDataSource struct {
 	client *wsapiclient.Client
 }
@@ -37,54 +33,75 @@ type VMDataSourceModel struct {
 }
 
 func (r *VMDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_datasource_vm"
+	resp.TypeName = req.ProviderTypeName + "_virtual_machine"
 }
 
 func (r *VMDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description:         "With this item we can read all the properties that we have in our VmWare Workstation Pro folder data, this means, that we can load a VM in oru infrastructure in case that we want to change its properties.",
-		MarkdownDescription: "We can read a VM of VmWare Workstation with this kind of data source.",
+		Description: `
+With this item we can read all the properties that we have in our VmWare Workstation Pro folder data,
+this means, that we can load a VM in our infrastructure in case that we want to change its properties.
+`,
+		MarkdownDescription: `
+We can read a VM of VmWare Workstation with this kind of data source.
+`,
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "That will be the ID of this VM.",
-				MarkdownDescription: "When the VM is created the VMWare Workstation Provider assign a new ID at this VM.",
+				Computed:    true,
+				Description: "That will be the ID of this VM.",
+				MarkdownDescription: `
+When the VM is created the VMWare Workstation Provider assign a new ID at this VM.
+`,
 			},
 			"denomination": schema.StringAttribute{
-				Required:            true,
-				Description:         "The name of the VM.",
-				MarkdownDescription: "This will be the name that we can see in the VmWare Workstation.",
-				Validators:          []validator.String{},
+				Required:    true,
+				Description: "The name of the VM.",
+				MarkdownDescription: `
+This will be the name that we can see in the VmWare Workstation.
+`,
+				Validators: []validator.String{},
 			},
 			"description": schema.StringAttribute{
-				Computed:            true,
-				Description:         "Little bit description of the VM",
-				MarkdownDescription: "Here will have all the description about of the VM, e.g. extra information regarding the purpose of the VM or which is the user and pass of the VM.",
+				Computed:    true,
+				Description: "Little bit description of the VM",
+				MarkdownDescription: `
+Here will have all the description about of the VM, e.g. extra information regarding the purpose of the VM or which is the user and pass of the VM.
+`,
 			},
 			"path": schema.StringAttribute{
-				Computed:            true,
-				Description:         "Absolute path of the VM machine",
-				MarkdownDescription: "Where is the folder where we have the .vmx file of the VM, normally we have this file in the default folder of the VmWare Workstation config.",
+				Computed:    true,
+				Description: "Absolute path of the VM machine",
+				MarkdownDescription: `
+Where is the folder where we have the .vmx file of the VM, normally we have this file in the default folder of the VmWare Workstation config.
+`,
 			},
 			"processors": schema.Int32Attribute{
-				Computed:            true,
-				Description:         "Number of processors that will have the VM",
-				MarkdownDescription: "This will be the amount of Processors that the VM will have.",
+				Computed:    true,
+				Description: "Number of processors that will have the VM",
+				MarkdownDescription: `
+This will be the amount of Processors that the VM will have.
+`,
 			},
 			"memory": schema.Int32Attribute{
-				Computed:            true,
-				Description:         "How much memory will have the VM",
-				MarkdownDescription: "This will be the amount of Memory that the VM will have.",
+				Computed:    true,
+				Description: "How much memory will have the VM",
+				MarkdownDescription: `
+This will be the amount of Memory that the VM will have.
+`,
 			},
 			"state": schema.StringAttribute{
-				Computed:            true,
-				Description:         "Which will be the state of the VM when we will deploy it",
-				MarkdownDescription: "That will be state of the VM, that's means that we can have a PowerON VM (on) or a PowerOFF VM (off).",
+				Computed:    true,
+				Description: "Which will be the state of the VM when we will deploy it",
+				MarkdownDescription: `
+That will be state of the VM, that's means that we can have a PowerON VM (on) or a PowerOFF VM (off).
+`,
 			},
 			"ip": schema.StringAttribute{
-				Computed:            true,
-				Description:         "Which is the IP of the instance",
-				MarkdownDescription: "When the VM is in PowerON state, we can see which IP have the VM in order to connect with the VM.",
+				Computed:    true,
+				Description: "Which is the IP of the instance",
+				MarkdownDescription: `
+When the VM is in PowerON state, we can see which IP have the VM in order to connect with the VM.
+`,
 			},
 		},
 	}
@@ -195,4 +212,8 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	// Save data into Terraform state
 	diags = resp.State.Set(ctx, &data)
 	resp.Diagnostics.Append(diags...)
+}
+
+func NewVMDataSource() datasource.DataSource {
+	return &VMDataSource{}
 }

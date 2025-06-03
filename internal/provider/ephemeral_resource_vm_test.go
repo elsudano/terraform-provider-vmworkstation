@@ -37,7 +37,7 @@ func TestAccVMEphemeralResource(t *testing.T) {
 
 func testAccVMEphemeralResourceConfig(configurableAttribute string) string {
 	return fmt.Sprintf(`
-ephemeral "vmworkstation_ephemeral" "vm1" {
+ephemeral "vmworkstation_virtual_machine" "vm1" {
   configurable_attribute = %[1]q
 }
 
@@ -50,7 +50,7 @@ provider "vmworkstation" {
 }
 
 provider "echo" {
-  data = ephemeral.vmworkstation_ephemeral.vm1
+  data = ephemeral.vmworkstation_virtual_machine.vm1
 }
 
 resource "echo" "test" {}

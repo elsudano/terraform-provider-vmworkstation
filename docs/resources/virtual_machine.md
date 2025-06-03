@@ -5,7 +5,7 @@ description: |-
   We can create a VM within of VmWare Workstation with this kind of resource.
 ---
 
-# Resource vmworkstation_resource_vm
+# Resource vmworkstation_virtual_machine
 
 We can create a VM within of VmWare Workstation with this kind of resource.
 
@@ -32,7 +32,7 @@ We can create a VM within of VmWare Workstation with this kind of resource.
 
 ## Example Usage
 
-/home/usuario/go/src/github.com/elsudano/terraform-provider-vmworkstation/examples/resources/vmworkstation_resource_vm/resource.tf
+/home/usuario/go/src/github.com/elsudano/terraform-provider-vmworkstation/examples/resources/vmworkstation_virtual_machine/resource.tf
 
 ```terraform
 resource "vmworkstation_resource_vm" "vm" {
@@ -45,3 +45,9 @@ resource "vmworkstation_resource_vm" "vm" {
   state        = "off"
 }
 ```
+
+## Limitations
+
+As you know all the virtual machines needs drivers to handling the diferent parts of the virtual hardware it have.
+For that reason the Parent VM that we will use to clone in a new VM needs the VmTools drivers installed before to use it,
+because if we want to know which is the IP of our new VM, VmWare Workstations needs to use these drivers to know all this information.

@@ -49,58 +49,84 @@ A Terraform provider to work with VmWare Workstation Pro, allowing management of
 Supports management through VMware Workstation Pro.
 		`,
 		MarkdownDescription: `
-The VmWare Workstation Pro provider gives Terraform the ability to work with VmWare Workstation Pro Products,
-notably [VmWare Workstation Pro][vmware-workstation]. This provider can be used to manage many aspects of a
-VmWare Workstation Pro environment, including virtual machines, datastores, and more.
+The VmWare Workstation Pro provider gives Terraform the ability to work with [VmWare Workstation Pro Products][vmware-workstation].
+This provider can be used to manage many aspects of a VmWare Workstation Pro environment, including
+Virtual Machines, Shared Folders and Networking.
 
-Use the navigation on the left to read about the various resources and data sources supported by the provider.
+Use the navigation on the left to read about the various resources and data sources supported by this provider.
 
-~> NOTE: This provider requires API REST enable on VmWare Workstation Pro.
-		`,
+~> NOTE: This provider requires API REST (vmrest) enable on VmWare Workstation Pro.
+
+[vmware-workstation]: https://www.vmware.com/products/workstation-pro.html
+`,
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				MarkdownDescription: "The URL for connect to the API REST.",
-				Required:            true,
-				Optional:            false,
-				Sensitive:           false,
-				Description:         "The URL for connect to the API REST.",
-				DeprecationMessage:  "",
-				Validators:          []validator.String{},
+				MarkdownDescription: `
+That's would be the endpoint where we have our VmREST service of VmWare Workstation Pro,
+ideally you can configure this value in the provider block of your code, but if you want
+You can use the *VMWS_ENDPOINT* environment variable to set this value as well.
+`,
+				Required:           true,
+				Optional:           false,
+				Sensitive:          false,
+				Description:        "The URL for connect to the API REST.",
+				DeprecationMessage: "",
+				Validators:         []validator.String{},
 			},
 			"username": schema.StringAttribute{
-				MarkdownDescription: "The username to use in the API calls.", // string,
-				Required:            true,                                    // bool,
-				Optional:            false,                                   // bool,
-				Sensitive:           false,                                   // bool,
-				Description:         "The username to use in the API calls.", // string,
-				DeprecationMessage:  "",                                      // string,
-				Validators:          []validator.String{},                    //[]validator.String
+				MarkdownDescription: `
+That's would be the username that we have configured in our VmREST service of VmWare Workstation Pro,
+When you run the vmrest command you can configure the username to access at this API.
+You can use the *VMWS_USERNAME* environment variable to set this value.
+`, // string,
+				Required:           true,                                    // bool,
+				Optional:           false,                                   // bool,
+				Sensitive:          false,                                   // bool,
+				Description:        "The username to use in the API calls.", // string,
+				DeprecationMessage: "",                                      // string,
+				Validators:         []validator.String{},                    //[]validator.String
 			},
 			"password": schema.StringAttribute{
-				MarkdownDescription: "The user password for VMWare Workstation Pro API REST operations.",
-				Required:            true,
-				Optional:            false,
-				Sensitive:           true,
-				Description:         "The user password for VMWare Workstation Pro API REST operations.",
-				DeprecationMessage:  "",
-				Validators:          []validator.String{},
+				MarkdownDescription: `
+That's would be the password that we have configured in our VmREST service of VmWare Workstation Pro,
+When you run the vmrest command you can configure the password to access at this API.
+You can use the *VMWS_PASSWORD* environment variable to set this value.
+`,
+				Required:           true,
+				Optional:           false,
+				Sensitive:          true,
+				Description:        "The user password for VMWare Workstation Pro API REST operations.",
+				DeprecationMessage: "",
+				Validators:         []validator.String{},
 			},
 			"https": schema.BoolAttribute{
-				MarkdownDescription: "When this have set to true the 'url' connect to over https.",
-				Required:            false,
-				Optional:            true,
-				Sensitive:           false,
-				Description:         "When this have set to true the 'url' connect to over https.",
-				DeprecationMessage:  "",
+				MarkdownDescription: `
+As you konw the VmREST service of VmWare Workstation Pro, can work in HTTP or HTTPS depending if you create
+a certificate and run with this certificate the vmrest command or not, for that reason you will need
+set at TRUE if you generate the certificate or set FALSE if you want to work in HTTP protocol.
+You can use the *VMWS_HTTPS* environment variable to set this value.
+`,
+				Required:           false,
+				Optional:           true,
+				Sensitive:          false,
+				Description:        "When this have set to true the 'url' connect to over https.",
+				DeprecationMessage: "",
 			},
 			"debug": schema.StringAttribute{
-				MarkdownDescription: "Enable debug for find errors.",
-				Required:            false,
-				Optional:            true,
-				Sensitive:           false,
-				Description:         "Enable debug for find errors.",
-				DeprecationMessage:  "",
-				Validators:          []validator.String{},
+				MarkdownDescription: `
+As a piece of software this provider can will be improved, for that reason if you suspect that you found
+an issue in the provider, you can enable the debug mode with this field, you have 3 modes NONE, WARN and ERROR.
+This levels have been selected from this [link][logging-severity].
+You can use the *VMWS_DEBUG* environment variable to set this value.
+
+[logging-severity]: https://developer.hashicorp.com/terraform/plugin/framework/diagnostics#severity
+`,
+				Required:           false,
+				Optional:           true,
+				Sensitive:          false,
+				Description:        "Enable debug for find errors.",
+				DeprecationMessage: "",
+				Validators:         []validator.String{},
 			},
 		},
 	}
@@ -253,6 +279,12 @@ func (p *VMWProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	resp.ResourceData = client
 }
 
+func (p *VMWProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+	return []func() datasource.DataSource{
+		NewVMDataSource,
+	}
+}
+
 func (p *VMWProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewVMResource,
@@ -262,12 +294,6 @@ func (p *VMWProvider) Resources(ctx context.Context) []func() resource.Resource 
 func (p *VMWProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
 	return []func() ephemeral.EphemeralResource{
 		NewVMEphemeralResource,
-	}
-}
-
-func (p *VMWProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
-		NewVMDataSource,
 	}
 }
 

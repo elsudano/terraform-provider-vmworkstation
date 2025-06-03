@@ -5,7 +5,7 @@ description: |-
   We can read a VM of VmWare Workstation with this kind of data source.
 ---
 
-# Data Source vmworkstation_datasource_vm
+# Data Source vmworkstation_virtual_machine
 
 We can read a VM of VmWare Workstation with this kind of data source.
 
@@ -28,7 +28,7 @@ We can read a VM of VmWare Workstation with this kind of data source.
 
 ## Example Usage
 
-/home/usuario/go/src/github.com/elsudano/terraform-provider-vmworkstation/examples/data-sources/vmworkstation_datasource_vm/data-source.tf
+/home/usuario/go/src/github.com/elsudano/terraform-provider-vmworkstation/examples/data-sources/vmworkstation_virtual_machine/data-source.tf
 
 ```terraform
 data "vmworkstation_datasource_vm" "parentvm" {

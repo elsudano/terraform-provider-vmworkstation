@@ -1,0 +1,24 @@
+---
+page_title: "{{ .Type | trimspace }}: Virtual Machine"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{ .Type | trimspace }} {{ .Name | trimspace }}
+
+{{ .Description | trimspace }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Example Usage
+
+{{ .ExampleFile }}
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name) }}
+
+## Limitations
+
+As you know all the virtual machines needs drivers to handling the diferent parts of the virtual hardware it have.
+For that reason the Parent VM that we will use to clone in a new VM needs the VmTools drivers installed before to use it,
+because if we want to know which is the IP of our new VM, VmWare Workstations needs to use these drivers to know all this information.

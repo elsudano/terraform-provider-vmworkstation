@@ -43,47 +43,62 @@ type VMResourceModel struct {
 }
 
 func (r *VMResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_resource_vm"
+	resp.TypeName = req.ProviderTypeName + "_virtual_machine"
 }
 
 func (r *VMResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Version:             1,
-		Description:         "The principal resource of VmWare Workstation Pro is a Virtual Machine, with this resource we can create a clone from a VM that we had in our VmWare Workstation Pro folder.",
-		MarkdownDescription: "We can create a VM within of VmWare Workstation with this kind of resource.",
+		Version: 1,
+		Description: `
+The principal resource of VmWare Workstation Pro is a Virtual Machine, with this resource we can create a
+clone from a VM that we had in our VmWare Workstation Pro folder.
+`,
+		MarkdownDescription: `
+We can create a VM within of VmWare Workstation with this kind of resource.
+`,
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Computed:            true,
-				Description:         "That will be the ID of this VM.",
-				MarkdownDescription: "When the VM is created the VMWare Workstation Provider assign a new ID at this VM.",
+				Computed:    true,
+				Description: "That will be the ID of this VM.",
+				MarkdownDescription: `
+When the VM is created the VMWare Workstation Provider assign a new ID at this VM.
+`,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"sourceid": schema.StringAttribute{
-				Required:            true,
-				Optional:            false,
-				Description:         "The ID of the VM that to use for clone at the new.",
-				MarkdownDescription: "The VmWare Workstation Provider needs a ID of a created VM to clone this VM in the new one with the new parameters.",
-				Validators:          []validator.String{},
+				Required:    true,
+				Optional:    false,
+				Description: "The ID of the VM that to use for clone at the new.",
+				MarkdownDescription: `
+The VmWare Workstation Provider needs a ID of a created VM to clone this VM in the new one with the new parameters.
+`,
+				Validators: []validator.String{},
 			},
 			"denomination": schema.StringAttribute{
-				Required:            false,
-				Optional:            true,
-				Description:         "The name of the VM.",
-				MarkdownDescription: "This will be the name that we can see in the VmWare Workstation.",
+				Required:    false,
+				Optional:    true,
+				Description: "The name of the VM.",
+				MarkdownDescription: `
+This will be the name that we can see in the VmWare Workstation.
+`,
 			},
 			"description": schema.StringAttribute{
-				Required:            false,
-				Optional:            true,
-				Description:         "Little bit description of the VM",
-				MarkdownDescription: "Here will have all the description about of the VM, e.g. extra information regarding the purpose of the VM or which is the user and pass of the VM.",
+				Required:    false,
+				Optional:    true,
+				Description: "Little bit description of the VM",
+				MarkdownDescription: `
+Here will have all the description about of the VM, e.g. extra information regarding the purpose of the VM or which is the user and pass of the VM.
+`,
 			},
 			"path": schema.StringAttribute{
-				Required:            true,
-				Optional:            false,
-				Description:         "Absolute path of the VM machine",
-				MarkdownDescription: "Where is the folder where we have the .vmx file of the VM, normally we have this file in the default folder of the VmWare Workstation config.",
+				Required:    true,
+				Optional:    false,
+				Description: "Absolute path of the VM machine",
+				MarkdownDescription: `
+Where is the folder where we have the .vmx file of the VM, normally we have this file in the default folder of the VmWare Workstation config.
+`,
 			},
 			// "image": schema.StringAttribute{
 			// 	Required:            true,
@@ -91,7 +106,7 @@ func (r *VMResource) Schema(ctx context.Context, req resource.SchemaRequest, res
 			// 	Computed:            false,
 			// 	Sensitive:           false,
 			// 	Description:         "String with ID for the image that create the VM.",
-			// 	MarkdownDescription: "String with ID for the image that create the VM.",
+			// 	MarkdownDescription: `String with ID for the image that create the VM.`,
 			// 	DeprecationMessage:  "",
 			// 	Validators:          []validator.String{},
 			// 	PlanModifiers: []planmodifier.String{
@@ -100,30 +115,38 @@ func (r *VMResource) Schema(ctx context.Context, req resource.SchemaRequest, res
 			// 	Default: stringdefault.StaticString("example value when not configured"),
 			// },
 			"processors": schema.Int32Attribute{
-				Required:            true,
-				Optional:            false,
-				Description:         "Number of processors that will have the VM",
-				MarkdownDescription: "This will be the amount of Processors that the VM will have.",
+				Required:    true,
+				Optional:    false,
+				Description: "Number of processors that will have the VM",
+				MarkdownDescription: `
+This will be the amount of Processors that the VM will have.
+`,
 			},
 			"memory": schema.Int32Attribute{
-				Required:            true,
-				Optional:            false,
-				Description:         "How much memory will have the VM",
-				MarkdownDescription: "This will be the amount of Memory that the VM will have.",
+				Required:    true,
+				Optional:    false,
+				Description: "How much memory will have the VM",
+				MarkdownDescription: `
+This will be the amount of Memory that the VM will have.
+`,
 			},
 			"state": schema.StringAttribute{
-				Required:            false,
-				Optional:            true,
-				Description:         "Which will be the state of the VM when we will deploy it",
-				MarkdownDescription: "That will be state of the VM, that's means that we can have a PowerON VM (on) or a PowerOFF VM (off).",
+				Required:    false,
+				Optional:    true,
+				Description: "Which will be the state of the VM when we will deploy it",
+				MarkdownDescription: `
+That will be state of the VM, that's means that we can have a PowerON VM (on) or a PowerOFF VM (off).
+`,
 			},
 			"ip": schema.StringAttribute{
-				Required:            false,
-				Optional:            false,
-				Computed:            true,
-				Description:         "Which is the IP of the instance",
-				MarkdownDescription: "When the VM is in PowerON state, we can see which IP have the VM in order to connect with the VM.",
-				Default:             stringdefault.StaticString("0.0.0.0/0"),
+				Required:    false,
+				Optional:    false,
+				Computed:    true,
+				Description: "Which is the IP of the instance",
+				MarkdownDescription: `
+When the VM is in PowerON state, we can see which IP have the VM in order to connect with the VM.
+`,
+				Default: stringdefault.StaticString("0.0.0.0/0"),
 			},
 		},
 	}

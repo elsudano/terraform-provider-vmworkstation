@@ -5,7 +5,7 @@ description: |-
   Example ephemeral resource
 ---
 
-# Ephemeral Resource vmworkstation_ephemeral
+# Ephemeral Resource vmworkstation_virtual_machine
 
 Example ephemeral resource
 
@@ -22,10 +22,10 @@ Example ephemeral resource
 
 ## Example Usage
 
-/home/usuario/go/src/github.com/elsudano/terraform-provider-vmworkstation/examples/ephemeral-resources/vmworkstation_ephemeral/ephemeral-resource.tf
+/home/usuario/go/src/github.com/elsudano/terraform-provider-vmworkstation/examples/ephemeral-resources/vmworkstation_virtual_machine/ephemeral-resource.tf
 
 ```terraform
-ephemeral "vmworkstation_ephemeral" "vm" {
+ephemeral "vmworkstation_virtual_machine" "vm" {
   configurable_attribute = "test01"
 }
 ```

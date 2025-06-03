@@ -22,17 +22,17 @@ func TestAccVMResource(t *testing.T) {
 				Config: testAccVMResourceConfig(2),
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
-						"vmworkstation_resource_vm.vm1",
+						"vmworkstation_virtual_machine.vm1",
 						tfjsonpath.New("sourceid"),
 						knownvalue.StringExact("545OMDAL1R520604HKNKA6TTK6TBNOHK"),
 					),
 					statecheck.ExpectKnownValue(
-						"vmworkstation_resource_vm.vm1",
+						"vmworkstation_virtual_machine.vm1",
 						tfjsonpath.New("processors"),
 						knownvalue.Int32Exact(2),
 					),
 					statecheck.ExpectKnownValue(
-						"vmworkstation_resource_vm.vm1",
+						"vmworkstation_virtual_machine.vm1",
 						tfjsonpath.New("ip"),
 						knownvalue.StringExact("0.0.0.0/0"),
 					),
@@ -40,7 +40,7 @@ func TestAccVMResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "vmworkstation_resource_vm.vm1",
+				ResourceName:      "vmworkstation_virtual_machine.vm1",
 				ImportState:       true,
 				ImportStateVerify: true,
 				// This is not normally necessary, but is here because this
@@ -54,17 +54,17 @@ func TestAccVMResource(t *testing.T) {
 				Config: testAccVMResourceConfig(4),
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(
-						"vmworkstation_resource_vm.vm1",
+						"vmworkstation_virtual_machine.vm1",
 						tfjsonpath.New("sourceid"),
 						knownvalue.StringExact("545OMDAL1R520604HKNKA6TTK6TBNOHK"),
 					),
 					statecheck.ExpectKnownValue(
-						"vmworkstation_resource_vm.vm1",
+						"vmworkstation_virtual_machine.vm1",
 						tfjsonpath.New("processors"),
 						knownvalue.Int32Exact(4),
 					),
 					statecheck.ExpectKnownValue(
-						"vmworkstation_resource_vm.vm1",
+						"vmworkstation_virtual_machine.vm1",
 						tfjsonpath.New("ip"),
 						knownvalue.StringExact("0.0.0.0/0"),
 					),
@@ -85,9 +85,9 @@ provider "vmworkstation" {
   debug    = "NONE"
 }
 
-resource "vmworkstation_resource_vm" "vm1" {
+resource "vmworkstation_virtual_machine" "vm1" {
   sourceid     = "545OMDAL1R520604HKNKA6TTK6TBNOHK"
-  denomination = "go_tests_vm1"
+  denomination = "vm1"
   description  = "This VM is just a resource created by the GO tests."
   path         = "D:\\VirtualMachines\\vm1\\vm1.vmx"
   processors   = %[1]v
