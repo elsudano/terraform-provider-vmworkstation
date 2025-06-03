@@ -178,7 +178,7 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	if VM.CPU.Processors == 0 {
 		resp.Diagnostics.AddError(
 			"The VM Processors field is empty.",
-			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.CPU.Processors),
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.CPU.Processors),
 		)
 		return
 	}
@@ -187,7 +187,7 @@ func (r *VMDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	if VM.Memory == 0 {
 		resp.Diagnostics.AddError(
 			"The VM Memory field is empty.",
-			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Memory),
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.Memory),
 		)
 		return
 	}
