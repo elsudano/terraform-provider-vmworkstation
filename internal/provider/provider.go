@@ -263,7 +263,8 @@ func (p *VMWProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		return
 	}
 	// Create a new VmWare Workstation client using the configuration values
-	client, err := wsapiclient.NewClient(endpoint, username, password, https, debug)
+	client := wsapiclient.New()
+	err := client.VMService.ConfigClient(endpoint, username, password, https, debug)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to Create VmWare Workstation API Client",

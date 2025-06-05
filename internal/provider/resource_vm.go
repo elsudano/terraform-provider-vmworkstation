@@ -26,7 +26,7 @@ func NewVMResource() resource.Resource {
 }
 
 type VMResource struct {
-	client *wsapiclient.Client
+	client *wsapiclient.WSAPIClient
 }
 
 // ExampleResourceModel describes the resource data model.
@@ -157,7 +157,7 @@ func (r *VMResource) Configure(ctx context.Context, req resource.ConfigureReques
 	if req.ProviderData == nil {
 		return
 	}
-	client, ok := req.ProviderData.(*wsapiclient.Client)
+	client, ok := req.ProviderData.(*wsapiclient.WSAPIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
