@@ -12,10 +12,6 @@ import (
 
 var _ ephemeral.EphemeralResource = &VMEphemeralResource{}
 
-func NewVMEphemeralResource() ephemeral.EphemeralResource {
-	return &VMEphemeralResource{}
-}
-
 type VMEphemeralResource struct {
 	// client *http.Client // If applicable, a client can be initialized here.
 }
@@ -69,4 +65,8 @@ func (r *VMEphemeralResource) Open(ctx context.Context, req ephemeral.OpenReques
 
 	// Save data into ephemeral result data
 	resp.Diagnostics.Append(resp.Result.Set(ctx, &data)...)
+}
+
+func NewVMEphemeralResource() ephemeral.EphemeralResource {
+	return &VMEphemeralResource{}
 }

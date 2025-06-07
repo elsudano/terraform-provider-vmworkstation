@@ -21,10 +21,6 @@ import (
 var _ resource.Resource = &VMResource{}
 var _ resource.ResourceWithImportState = &VMResource{}
 
-func NewVMResource() resource.Resource {
-	return &VMResource{}
-}
-
 type VMResource struct {
 	client *wsapiclient.WSAPIClient
 }
@@ -253,4 +249,8 @@ func (r *VMResource) Delete(ctx context.Context, req resource.DeleteRequest, res
 
 func (r *VMResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+}
+
+func NewVMResource() resource.Resource {
+	return &VMResource{}
 }
