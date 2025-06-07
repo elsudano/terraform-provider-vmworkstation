@@ -174,26 +174,91 @@ func (r *VMResource) Create(ctx context.Context, req resource.CreateRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create example, got error: %s", err))
-	//     return
-	// }
-	// For the purposes of this example code, hardcoding a response value to
-	// save into the Terraform state.
-	data.Id = types.StringValue("MYNEWVMISCREATED")
-	data.SourceID = types.StringValue("545OMDAL1R520604HKNKA6TTK6TBNOHK")
+	VM, err := r.client.CreateVM(data.SourceID.ValueString(), data.Denomination.ValueString(), data.Description.ValueString(), int(data.Processors.ValueInt32()), int(data.Memory.ValueInt32()))
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create VM, got error: %s", err))
+		return
+	}
+	tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
+
+	if VM.IdVM == "" {
+		resp.Diagnostics.AddError(
+			"The VM Id field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.IdVM),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Id field is: %#v", VM.IdVM))
+	data.Id = types.StringValue(VM.IdVM)
+	if VM.Denomination == "" {
+		resp.Diagnostics.AddError(
+			"The VM Denomination field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Denomination),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Denomination field is: %#v", VM.Denomination))
+	data.Denomination = types.StringValue(VM.Denomination)
+	if VM.Description == "" {
+		resp.Diagnostics.AddError(
+			"The VM Description field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Description),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Description field is: %#v", VM.Description))
+	data.Description = types.StringValue(VM.Description)
+	if VM.Path == "" {
+		resp.Diagnostics.AddError(
+			"The VM Path field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Path),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Path field is: %#v", VM.Path))
+	data.Path = types.StringValue(VM.Path)
+	if VM.CPU.Processors == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Processors field is empty.",
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.CPU.Processors),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Processors field is: %#v", VM.CPU.Processors))
+	data.Processors = types.Int32Value(VM.CPU.Processors)
+	if VM.Memory == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Memory field is empty.",
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.Memory),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Memory field is: %#v", VM.Memory))
+	data.Memory = types.Int32Value(VM.Memory)
+	if VM.PowerStatus == "" {
+		resp.Diagnostics.AddError(
+			"The VM PowerStatus field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.PowerStatus),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM PowerStatus field is: %#v", VM.PowerStatus))
+	data.State = types.StringValue(VM.PowerStatus)
+	// You will need fix that regarding of the network
 	data.Ip = types.StringValue("0.0.0.0/0")
+
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
-	tflog.Trace(ctx, "created a resource")
+	tflog.Info(ctx, "We have Created a new VM")
+
 	// Save data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	diags = resp.State.Set(ctx, &data)
+	resp.Diagnostics.Append(diags...)
 }
 
 func (r *VMResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data VMResourceModel
-	// Read Terraform prior state data into the model
+	var data VMDataSourceModel
+	// Read Terraform configuration data into the model
 	diags := req.State.Get(ctx, &data)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -201,13 +266,85 @@ func (r *VMResource) Read(ctx context.Context, req resource.ReadRequest, resp *r
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read example, got error: %s", err))
-	//     return
-	// }
-	// Save updated data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	VM, err := r.client.LoadVM(data.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
+		return
+	}
+	tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
+	if VM.IdVM == "" {
+		resp.Diagnostics.AddError(
+			"The VM Id field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.IdVM),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Id field is: %#v", VM.IdVM))
+	data.Id = types.StringValue(VM.IdVM)
+	if VM.Denomination == "" {
+		resp.Diagnostics.AddError(
+			"The VM Denomination field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Denomination),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Denomination field is: %#v", VM.Denomination))
+	data.Denomination = types.StringValue(VM.Denomination)
+	if VM.Description == "" {
+		resp.Diagnostics.AddError(
+			"The VM Description field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Description),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Description field is: %#v", VM.Description))
+	data.Description = types.StringValue(VM.Description)
+	if VM.Path == "" {
+		resp.Diagnostics.AddError(
+			"The VM Path field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Path),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Path field is: %#v", VM.Path))
+	data.Path = types.StringValue(VM.Path)
+	if VM.CPU.Processors == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Processors field is empty.",
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.CPU.Processors),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Processors field is: %#v", VM.CPU.Processors))
+	data.Processors = types.Int32Value(VM.CPU.Processors)
+	if VM.Memory == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Memory field is empty.",
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.Memory),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Memory field is: %#v", VM.Memory))
+	data.Memory = types.Int32Value(VM.Memory)
+	if VM.PowerStatus == "" {
+		resp.Diagnostics.AddError(
+			"The VM PowerStatus field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.PowerStatus),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM PowerStatus field is: %#v", VM.PowerStatus))
+	data.State = types.StringValue(VM.PowerStatus)
+	// You will need fix that regarding of the network
+	data.Ip = types.StringValue("0.0.0.0/0")
+
+	// Write logs using the tflog package
+	// Documentation: https://terraform.io/plugin/log
+	tflog.Info(ctx, "We have Read the VM")
+
+	// Save data into Terraform state
+	diags = resp.State.Set(ctx, &data)
+	resp.Diagnostics.Append(diags...)
 }
 
 func (r *VMResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
@@ -220,12 +357,88 @@ func (r *VMResource) Update(ctx context.Context, req resource.UpdateRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update example, got error: %s", err))
-	//     return
-	// }
-	// Save updated data into Terraform state
+	VM, err := r.client.LoadVM(data.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
+		return
+	}
+	err = r.client.UpdateVM(VM, data.Denomination.ValueString(), data.Description.ValueString(), int(data.Processors.ValueInt32()), int(data.Memory.ValueInt32()), data.State.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update VM, got error: %s", err))
+		return
+	}
+	tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
+	if VM.IdVM == "" {
+		resp.Diagnostics.AddError(
+			"The VM Id field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.IdVM),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Id field is: %#v", VM.IdVM))
+	data.Id = types.StringValue(VM.IdVM)
+	if VM.Denomination == "" {
+		resp.Diagnostics.AddError(
+			"The VM Denomination field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Denomination),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Denomination field is: %#v", VM.Denomination))
+	data.Denomination = types.StringValue(VM.Denomination)
+	if VM.Description == "" {
+		resp.Diagnostics.AddError(
+			"The VM Description field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Description),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Description field is: %#v", VM.Description))
+	data.Description = types.StringValue(VM.Description)
+	if VM.Path == "" {
+		resp.Diagnostics.AddError(
+			"The VM Path field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Path),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Path field is: %#v", VM.Path))
+	data.Path = types.StringValue(VM.Path)
+	if VM.CPU.Processors == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Processors field is empty.",
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.CPU.Processors),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Processors field is: %#v", VM.CPU.Processors))
+	data.Processors = types.Int32Value(VM.CPU.Processors)
+	if VM.Memory == 0 {
+		resp.Diagnostics.AddError(
+			"The VM Memory field is empty.",
+			fmt.Sprintf("Expected number, got: %T. Please report this issue to the provider developers.", VM.Memory),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM Memory field is: %#v", VM.Memory))
+	data.Memory = types.Int32Value(VM.Memory)
+	if VM.PowerStatus == "" {
+		resp.Diagnostics.AddError(
+			"The VM PowerStatus field is empty.",
+			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.PowerStatus),
+		)
+		return
+	}
+	tflog.Info(ctx, fmt.Sprintf("The VM PowerStatus field is: %#v", VM.PowerStatus))
+	data.State = types.StringValue(VM.PowerStatus)
+	// You will need fix that regarding of the network
+	data.Ip = types.StringValue("0.0.0.0/0")
+
+	// Write logs using the tflog package
+	// Documentation: https://terraform.io/plugin/log
+	tflog.Info(ctx, "We have Updated the VM")
+
+	// Save data into Terraform state
 	diags = resp.State.Set(ctx, &data)
 	resp.Diagnostics.Append(diags...)
 }
@@ -240,11 +453,17 @@ func (r *VMResource) Delete(ctx context.Context, req resource.DeleteRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete example, got error: %s", err))
-	//     return
-	// }
+	VM, err := r.client.LoadVM(data.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to Read VM, got error: %s", err))
+		return
+	}
+	err = r.client.DeleteVM(VM)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to Delete VM, got error: %s", err))
+		return
+	}
+	tflog.Info(ctx, "We have Deleted the VM")
 }
 
 func (r *VMResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
