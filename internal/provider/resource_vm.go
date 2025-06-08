@@ -174,7 +174,7 @@ func (r *VMResource) Create(ctx context.Context, req resource.CreateRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	VM, err := r.client.CreateVM(data.SourceID.ValueString(), data.Denomination.ValueString(), data.Description.ValueString(), int(data.Processors.ValueInt32()), int(data.Memory.ValueInt32()))
+	VM, err := r.client.CreateVM(data.SourceID.ValueString(), data.Denomination.ValueString(), data.Description.ValueString(), data.Processors.ValueInt32(), data.Memory.ValueInt32())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create VM, got error: %s", err))
 		return
@@ -362,7 +362,7 @@ func (r *VMResource) Update(ctx context.Context, req resource.UpdateRequest, res
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read VM, got error: %s", err))
 		return
 	}
-	err = r.client.UpdateVM(VM, data.Denomination.ValueString(), data.Description.ValueString(), int(data.Processors.ValueInt32()), int(data.Memory.ValueInt32()), data.State.ValueString())
+	err = r.client.UpdateVM(VM, data.Denomination.ValueString(), data.Description.ValueString(), data.Processors.ValueInt32(), data.Memory.ValueInt32(), data.State.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update VM, got error: %s", err))
 		return
