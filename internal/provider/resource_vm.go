@@ -190,24 +190,26 @@ func (r *VMResource) Create(ctx context.Context, req resource.CreateRequest, res
 	}
 	tflog.Info(ctx, fmt.Sprintf("The VM Id field is: %#v", VM.IdVM))
 	data.Id = types.StringValue(VM.IdVM)
-	if VM.Denomination == "" {
-		resp.Diagnostics.AddError(
-			"The VM Denomination field is empty.",
-			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Denomination),
-		)
-		return
-	}
-	tflog.Info(ctx, fmt.Sprintf("The VM Denomination field is: %#v", VM.Denomination))
-	data.Denomination = types.StringValue(VM.Denomination)
-	if VM.Description == "" {
-		resp.Diagnostics.AddError(
-			"The VM Description field is empty.",
-			fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Description),
-		)
-		return
-	}
-	tflog.Info(ctx, fmt.Sprintf("The VM Description field is: %#v", VM.Description))
-	data.Description = types.StringValue(VM.Description)
+	// Until the APIRest Team of VmWare Workstation resolve the issue with Description and Denomination
+	// we will maintain this commented.
+	// if VM.Denomination == "" {
+	// 	resp.Diagnostics.AddError(
+	// 		"The VM Denomination field is empty.",
+	// 		fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Denomination),
+	// 	)
+	// 	return
+	// }
+	// tflog.Info(ctx, fmt.Sprintf("The VM Denomination field is: %#v", VM.Denomination))
+	// data.Denomination = types.StringValue(VM.Denomination)
+	// if VM.Description == "" {
+	// 	resp.Diagnostics.AddError(
+	// 		"The VM Description field is empty.",
+	// 		fmt.Sprintf("Expected string, got: %T. Please report this issue to the provider developers.", VM.Description),
+	// 	)
+	// 	return
+	// }
+	// tflog.Info(ctx, fmt.Sprintf("The VM Description field is: %#v", VM.Description))
+	// data.Description = types.StringValue(VM.Description)
 	if VM.Path == "" {
 		resp.Diagnostics.AddError(
 			"The VM Path field is empty.",
