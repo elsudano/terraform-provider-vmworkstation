@@ -103,15 +103,43 @@ NOTES:
 
 NOTES:
 
-* We have changed the [Terraform Framework][framework] to develop this version.
-* We have developed the Data Source resource in this new version.
-* We have integrated a new package to handle the Debug Mode in API client.
-* We have developed new Interfaces in Client side in order to improve the testing.
-* Now we are handling more errors and we have improved the messages when Terraform found some issue.
+### **Features**  
+- **Major Release**: Introduced a new major version with the [Terraform Framework][framework].  
+- **VM Management**: Implemented `CreateVM`, `UpdateVM`, and `DeleteVM` methods.  
+- **Logging Improvements**: Upgraded logging system for increased verbosity and switched to a new library.  
+- **Power Control**: Added a new method to **power on VMs**.  
+- **API Client Refactor**: Restructured packages within the API client for better organization.  
+- **Debuggin**: Now we are handling more errors and we have improved the messages when Terraform found some issue.
+
+### **Fixes**  
+- **Parallelism Issues**: Resolved API concurrency problems with **VMWare Workstation REST API**.  
+- **API Client**: Fixed incorrect package and method references when calling the API client.  
+- **Datasource Handling**: Added VM name-based lookup support in datasources (required due to Terraform limitations).  
+- **Documentation**: Fixed broken references in documentation.  
+- **Testing**: Adjusted test values to align with the provider’s new behavior.  
+- **Build & Tests**: Corrected resource tests and Makefile issues.  
+
+### **Documentation**  
+- **Full Docs**: Generated complete documentation for the new release.  
+- **Code Clarity**: Added inline comments to improve code readability.  
+- **Structure**: Renamed files for future resource support and enhanced documentation behavior.  
+
+### **Maintenance & Improvements**  
+- **Dependencies**: Updated Go and third-party libraries.  
+- **API Client**: Modified value types in the API client for better compatibility.  
+- **Code Cleanup**:  
+  - Removed example files.  
+  - Renamed provider folder to follow correct naming conventions.  
+  - Deleted legacy files from previous versions.  
+- **VMWare API**: Upgraded the **VMWare Workstation API client**.  
+- **Validation**: Added guardrails to verify datasource correctness.  
+- **Legal**: Updated **LICENSE** file.  
+- **Release Process**: Enhanced **goreleaser.yaml** with new formats.  
+- **Go Upgrade**: Updated to a newer Go version.  
 
 [framework]: https://developer.hashicorp.com/terraform/plugin/framework
 
-KNOWN ISSUES:
+Known Issues:
 
 * We know that we can't change the Denomination and Description of the VM's
   because the API Rest fails, we are working on this issue
