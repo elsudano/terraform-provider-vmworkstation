@@ -43,7 +43,10 @@ With this item we can read all the properties that we have in our VmWare Worksta
 this means, that we can load a VM in our infrastructure in case that we want to change its properties.
 `,
 		MarkdownDescription: `
-We can read a VM of VmWare Workstation with this kind of data source.
+With this item we can read all the properties that we have in our VmWare Workstation Pro folder data,
+this means, that we can load a VM of our infrastructure in case that we want to change it properties.
+
+Basically we can read the resources of a VM and then handling this properties with terraform.
 `,
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

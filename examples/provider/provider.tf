@@ -3,5 +3,5 @@ provider "vmworkstation" {
   username = "Admin"
   password = "Adm1n#01"
   https    = true
-  debug    = "NONE" // NONE, WARN, ERROR
+  debug    = "NONE" // NONE, INFO, ERROR, DEBUG
 }

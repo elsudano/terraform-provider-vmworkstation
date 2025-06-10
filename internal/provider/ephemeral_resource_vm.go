@@ -28,7 +28,7 @@ func (r *VMEphemeralResource) Metadata(_ context.Context, req ephemeral.Metadata
 func (r *VMEphemeralResource) Schema(ctx context.Context, _ ephemeral.SchemaRequest, resp *ephemeral.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description:         "In case that we will need to create a Virtual Machine in VmWare Workstation Pro, but is just to make some temporal tasks we can use the Ephemeral Virtual Machine.",
-		MarkdownDescription: "Example ephemeral resource",
+		MarkdownDescription: "This function isn't implemented yet, we will try to implement in the future when the API Rest of VmWare Workstation allow us.",
 		Attributes: map[string]schema.Attribute{
 			"configurable_attribute": schema.StringAttribute{
 				MarkdownDescription: "Example configurable attribute",

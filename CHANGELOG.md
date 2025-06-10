@@ -98,3 +98,25 @@ NOTES:
 * Added method to power on VM  
 * Updated `goreleaser` to latest formats
 * Introduced a new control point for enhanced stability
+
+## 2.0.1 (June 15, 2025)
+
+NOTES:
+
+* We have changed the [Terraform Framework][framework] to develop this version.
+* We have developed the Data Source resource in this new version.
+* We have integrated a new package to handle the Debug Mode in API client.
+* We have developed new Interfaces in Client side in order to improve the testing.
+* Now we are handling more errors and we have improved the messages when Terraform found some issue.
+
+[framework]: https://developer.hashicorp.com/terraform/plugin/framework
+
+KNOWN ISSUES:
+
+* We know that we can't change the Denomination and Description of the VM's
+  because the API Rest fails, we are working on this issue
+  trying to fix it a soon as possible.
+* The parallelism, as you know Terraform has the option to create different
+  resources at the same time, but the API Rest of VmWare Workstation PRO
+  hasn't the option to create multiple resources at the same time, for that
+  reason, you will need to use the flag -parallelism=1 when you run the command Terraform.

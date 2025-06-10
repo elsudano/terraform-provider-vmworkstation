@@ -53,7 +53,10 @@ The principal resource of VmWare Workstation Pro is a Virtual Machine, with this
 clone from a VM that we had in our VmWare Workstation Pro folder.
 `,
 		MarkdownDescription: `
-We can create a VM within of VmWare Workstation with this kind of resource.
+The principal resource of VmWare Workstation Pro is a Virtual Machine, with this resource we can create a
+clone from a VM that we had in our VmWare Workstation Pro folder.
+
+With this resource we can create our own VM, first we will clone a "Parent VM" and the we can change the properties.
 `,
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

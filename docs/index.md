@@ -46,14 +46,17 @@ You can use the *VMWS_HTTPS* environment variable to set this value.
 
 ## Example Usage
 
-/home/usuario/go/src/github.com/elsudano/terraform-provider-vmworkstation/examples/provider/provider.tf
-
 ```terraform
 provider "vmworkstation" {
   endpoint = "https://localhost:8697/api"
   username = "Admin"
   password = "Adm1n#01"
   https    = true
-  debug    = "NONE" // NONE, WARN, ERROR
+  debug    = "NONE" // NONE, INFO, ERROR, DEBUG
 }
 ```
+
+## Known Issues:
+
+* We know that we can't change the Denomination and Description of the VM's because the API Rest fails, we are working on this issue trying to fix it a soon as possible.
+* The parallelism, as you know Terraform has the option to create different resources at the same time, but the API Rest of VmWare Workstation PRO hasn't the option to create multiple resources at the same time, for that reason, you will need to use the flag -parallelism=1 when you run the command Terraform.
