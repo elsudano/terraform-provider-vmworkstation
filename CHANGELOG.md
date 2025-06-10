@@ -111,6 +111,8 @@ NOTES:
 - **API Client Refactor**: Restructured packages within the API client for better organization.  
 - **Debuggin**: Now we are handling more errors and we have improved the messages when Terraform found some issue.
 
+[framework]: https://developer.hashicorp.com/terraform/plugin/framework
+
 ### **Fixes**  
 - **Parallelism Issues**: Resolved API concurrency problems with **VMWare Workstation REST API**.  
 - **API Client**: Fixed incorrect package and method references when calling the API client.  
@@ -136,8 +138,6 @@ NOTES:
 - **Legal**: Updated **LICENSE** file.  
 - **Release Process**: Enhanced **goreleaser.yaml** with new formats.  
 - **Go Upgrade**: Updated to a newer Go version.  
-
-[framework]: https://developer.hashicorp.com/terraform/plugin/framework
 
 Known Issues:
 
