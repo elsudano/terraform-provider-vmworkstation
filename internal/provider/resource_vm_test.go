@@ -78,7 +78,7 @@ func TestAccVMResource(t *testing.T) {
 func testAccVMResourceConfig(configurableAttribute int) string {
 	return fmt.Sprintf(`
 provider "vmworkstation" {
-  endpoint = "https://192.168.1.155:8697/api"
+  endpoint = "https://localhost:8697/api"
   username = "Admin"
   password = "Adm1n#01"
   https    = "true"
@@ -88,7 +88,7 @@ provider "vmworkstation" {
 resource "vmworkstation_virtual_machine" "vm1" {
   sourceid     = "545OMDAL1R520604HKNKA6TTK6TBNOHK"
   denomination = "vm1"
-  description  = "This VM is just a resource created by the GO tests."
+  description  = "vm base for test Terraform provider\r\nusuario\r\nusuar10"
   path         = "D:\\VirtualMachines\\vm1\\vm1.vmx"
   processors   = %[1]v
   memory       = 1024
