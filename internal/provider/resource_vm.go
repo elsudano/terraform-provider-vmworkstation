@@ -5,6 +5,7 @@ package vmworkstation
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/elsudano/vmware-workstation-api-client/wsapiclient"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -17,6 +18,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
+
+// That's the value of how many times we will retry before to continue creating a new resource.
+const RetriesToContinue int = 4
 
 var _ resource.Resource = &VMResource{}
 var _ resource.ResourceWithImportState = &VMResource{}
@@ -175,12 +179,23 @@ func (r *VMResource) Create(ctx context.Context, req resource.CreateRequest, res
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
 	VM, err := r.client.CreateVM(data.SourceID.ValueString(), data.Denomination.ValueString(), data.Description.ValueString(), data.Processors.ValueInt32(), data.Memory.ValueInt32())
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create VM, got error: %s", err))
-		return
+	// We need to put this for here because the APIRest of VmWare Workstation don't allow
+	// make calls in parallel, for that reason we need to wait until to complete the
+	// previous tasks before to continue with the creation of more resources.
+	count := 1
+	for {
+		if err == nil {
+			break
+		} else {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create VM, got error: %s", err))
+			time.Sleep(10 * time.Second)
+			if count > RetriesToContinue {
+				return
+			}
+			count++
+		}
 	}
 	tflog.Debug(ctx, fmt.Sprintf("The VM is: %#v", VM))
-
 	if VM.IdVM == "" {
 		resp.Diagnostics.AddError(
 			"The VM Id field is empty.",
@@ -259,7 +274,7 @@ func (r *VMResource) Create(ctx context.Context, req resource.CreateRequest, res
 }
 
 func (r *VMResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data VMDataSourceModel
+	var data VMResourceModel
 	// Read Terraform configuration data into the model
 	diags := req.State.Get(ctx, &data)
 	resp.Diagnostics.Append(diags...)
