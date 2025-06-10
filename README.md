@@ -9,10 +9,6 @@ with Terraform to work with [VMware Workstation][vmware-workstation] Products.
 
 [vmware-workstation]: https://www.vmware.com/products/workstation-pro.html
 
-This provider is inpirated on [vSphere Provider][vmware-vsphere]
-
-[vmware-vsphere]: https://github.com/terraform-providers/terraform-provider-vsphere
-
 For general information about Terraform, visit the [official
 website][tf-website] and the [GitHub project page][tf-github].
 
@@ -21,7 +17,7 @@ website][tf-website] and the [GitHub project page][tf-github].
 
 # Using the Provider
 
-The current version of this provider requires Terraform v0.10.2 or higher to
+The current version of this provider requires Terraform v1.0.0 or higher to
 run.
 
 Note that you need to run `terraform init` to fetch the provider before
@@ -33,8 +29,6 @@ official release announcement found [here][tf-0.15-announce].
 ## Full Provider Documentation
 
 The provider is documented in full on the [GitHub][github-docs] website.
-Check the provider documentation for details on entering your connection information and
-how to get started with writing configuration for vSphere resources.
 
 [github-docs]: https://github.com/elsudano/terraform-provider-vmworkstation
 
@@ -51,17 +45,17 @@ terraform {
   required_providers {
     vmworkstation = {
       source  = "elsudano/vmworkstation"
-      version = "1.0.4"
+      version = "2.0.0"
     }
   }
-  required_version = ">= 0.15.4"
+  required_version = ">= 1.0.0"
 }
 provider "vmworkstation" {
   user     = var.vmws_user
   password = var.vmws_password
   url      = var.vmws_url
   https    = false
-  debug    = true
+  debug    = "none"
 }
 ```
 
@@ -106,12 +100,7 @@ Normaly, you can enable the logs in Terraform setting this two environment vars:
 ```sh
 export TF_LOG=TRACE # INFO, DEBUG, TRACE
 export TF_LOG_PATH="terraform.log"
-```
-
-Also, you can enable the debug flag for the VMWORKSTATION provider setting the environment var:
-
-```sh
-export VMWS_DEBUG=true
+export TF_LOG_PROVIDER=DEBUG
 ```
 
 ## Installing the Local Plugin
@@ -142,7 +131,7 @@ new issue.
 [gh-prs]: https://github.com/elsudano/terraform-provider-vmworkstation/pulls
 
 If you wish to work on the provider, you'll first need [Go][go-website]
-installed on your machine (version 1.9+ is **required**). You'll also need to
+installed on your machine (version 1.24+ is **required**). You'll also need to
 correctly setup a [GOPATH][gopath], as well as adding `$GOPATH/bin` to your
 `$PATH`.
 

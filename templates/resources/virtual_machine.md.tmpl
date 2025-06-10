@@ -1,0 +1,27 @@
+---
+page_title: "{{ .Type | trimspace }}: Virtual Machine"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{ .Type | trimspace }} {{ .Name | trimspace }}
+
+{{ .Description | trimspace }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Example Usage
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name) }}
+
+## Limitations
+
+As you know all the virtual machines needs drivers to handling the different parts of the virtual hardware it have.
+For that reason the Parent VM that we will use to clone in a new VM needs the VmTools drivers installed before to use it,
+because if we want to know which is the IP of our new VM, VmWare Workstations needs to use these drivers to know all this information.
+
+## Known Issues:
+
+* We know that we can't change the Denomination and Description of the VM's because the API Rest fails, we are working on this issue trying to fix it a soon as possible.
+* The parallelism, as you know Terraform has the option to create different resources at the same time, but the API Rest of VmWare Workstation PRO hasn't the option to create multiple resources at the same time, for that reason, you will need to use the flag -parallelism=1 when you run the command Terraform.

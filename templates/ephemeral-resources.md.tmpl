@@ -1,0 +1,19 @@
+---
+page_title: "{{ .Type | trimspace }}: Virtual Machine"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{ .Type | trimspace }} {{ .Name | trimspace }}
+
+{{ .Description | trimspace }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Example Usage
+
+{{ tffile (printf "examples/ephemeral-resources/%s/ephemeral-resource.tf" .Name) }}
+
+## Future Feature
+This feature will be implemented in the future in this moment API Rest of VmWare Workstation isn't admit this kind of behavior.

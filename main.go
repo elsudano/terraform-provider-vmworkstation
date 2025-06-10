@@ -1,31 +1,39 @@
+// Copyright (c) Carlos De La Torre CC-BY-NC-v4 (https://creativecommons.org/licenses/by-nc/4.0/)
+
 package main
 
 import (
+	"context"
+	"flag"
 	"log"
 
-	"github.com/elsudano/terraform-provider-vmworkstation/vmworkstation"
-	"github.com/hashicorp/terraform-plugin-sdk/plugin"
+	vmworkstation "github.com/elsudano/terraform-provider-vmworkstation/internal/provider"
+	"github.com/hashicorp/terraform-plugin-framework/providerserver"
+)
+
+var (
+	// these will be set by the goreleaser configuration
+	// to appropriate values for the compiled binary.
+	version string = "dev"
+
+	// goreleaser can pass other information to the main package, such as the specific commit
+	// https://goreleaser.com/cookbooks/using-main.version/
 )
 
 func main() {
-	// Remove any date and time prefix in log package function output to
-	// prevent duplicate timestamp and incorrect log level setting
-	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
-
-	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: vmworkstation.Provider,
-	})
-}
-
-/* func main() {
-	client, err := wsapiclient.New()
-	if err != nil {
-		log.Printf("[VMWS] Fi: main.go Fu: Main Ob: %#v\n", client)
-		os.Exit(1)
+	var debug bool
+	flag.BoolVar(&debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
+	flag.Parse()
+	opts := providerserver.ServeOpts{
+		ProtocolVersion: 6,
+		// TODO: Update this string with the published name of your provider.
+		// Also update the tfplugindocs generate command to either remove the
+		// -provider-name flag or set its value to the updated provider name.
+		Address: "registry.terraform.io/elsudano/vmworkstation",
+		Debug:   debug,
 	}
-	fmt.Printf("La URL: %s\n", client.BaseURL.String())
-	client.User = "admin"
-	client.Password = "Adm1n#00"
-	client.BaseURL, _ = url.Parse("https://localhost:8697/api/")
-	fmt.Printf("La URL: %s\n", client.BaseURL.String())
-} */
+	err := providerserver.Serve(context.Background(), vmworkstation.New(version), opts)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+}

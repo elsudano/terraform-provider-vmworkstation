@@ -1,0 +1,16 @@
+---
+page_title: "{{ .Type | trimspace }}: Virtual Machine"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{ .Type | trimspace }} {{ .Name | trimspace }}
+
+{{ .Description | trimspace }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Example Usage
+
+{{ tffile (printf "examples/data-sources/%s/data-source.tf" .Name) }}

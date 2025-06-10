@@ -1,8 +1,6 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
 # Visit https://goreleaser.com for documentation on how to customize this
 # behavior.
+version: 2
 before:
   hooks:
     # this is just an example and not a requirement for provider building/publishing
@@ -10,7 +8,7 @@ before:
 builds:
 - env:
     # goreleaser does not work with CGO, it could also complicate
-    # usage by users in CI/CD systems like Terraform Cloud where
+    # usage by users in CI/CD systems like HCP Terraform where
     # they are unable to install libraries.
     - CGO_ENABLED=0
   mod_timestamp: '{{ .CommitTimestamp }}'
@@ -24,6 +22,9 @@ builds:
   goarch:
     - amd64
     - '386'
+  ignore:
+    - goos: darwin
+      goarch: '386'
   binary: '{{ .ProjectName }}_v{{ .Version }}'
 archives:
 - formats: [ 'zip' ]
