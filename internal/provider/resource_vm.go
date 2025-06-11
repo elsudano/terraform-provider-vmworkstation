@@ -180,7 +180,7 @@ func (r *VMResource) Create(ctx context.Context, req resource.CreateRequest, res
 	}
 	// If applicable, this is a great opportunity to initialize any necessary
 	// provider client data and make a call using it.
-	VM, err := r.client.CreateVM(data.SourceID.ValueString(), data.Denomination.ValueString(), data.Description.ValueString(), data.Processors.ValueInt32(), data.Memory.ValueInt32())
+	VM, err := r.client.CreateVM(data.SourceID.ValueString(), data.Denomination.ValueString(), data.Description.ValueString(), data.Processors.ValueInt32(), data.Memory.ValueInt32(), data.State.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create VM, got error: %s", err))
 		return
