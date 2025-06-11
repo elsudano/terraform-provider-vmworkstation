@@ -7,7 +7,7 @@ toolchain go1.24.3
 replace github.com/elsudano/vmware-workstation-api-client => ../vmware-workstation-api-client
 
 require (
-	github.com/elsudano/vmware-workstation-api-client v1.10.45
+	github.com/elsudano/vmware-workstation-api-client v1.10.46
 	github.com/hashicorp/terraform-plugin-framework v1.15.0
 	github.com/hashicorp/terraform-plugin-go v0.28.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
